@@ -1,29 +1,46 @@
-# Documentação — Impulso Cursos
+# Impulso Cursos — Documentação do sistema
 
-Guia de funcionamento e estudo do sistema de gestão de alunos. Para iniciar rapidamente o projeto, consulte o [README](README.md). Aqui você encontra a explicação das páginas, do banco e dos caminhos percorridos pelos dados.
+Guia para executar, compreender e apresentar o projeto de gestão de alunos.
+
+**Início rápido:** [README](README.md) · **Página inicial:** [index.php](index.php) · **Estilos:** [style.css](css/style.css)
+
+## Como usar este guia
+
+| Quero… | Onde encontrar |
+| --- | --- |
+| Rodar o site no computador | [Preparação e execução](#2-preparacao) |
+| Encontrar a responsabilidade de um arquivo | [Estrutura](#3-estrutura) e [páginas](#4-paginas) |
+| Entender os dados e as consultas | [Banco e funções](#5-dados) |
+| Aprender com exemplos do projeto | [Conceitos](#6-conceitos) e [exemplos](#7-exemplos) |
+| Conferir o funcionamento ou investigar um problema | [Testes](#8-testes) e [dúvidas frequentes](#9-duvidas) |
+| Preparar uma explicação do trabalho | [Roteiro de estudo](#12-estudo) |
 
 ## Sumário
 
-- [1. Objetivo](#1-objetivo)
-- [2. Tecnologias](#2-tecnologias)
-- [3. Arquivos PHP](#3-arquivos-php)
-- [4. Funções](#4-funções-de-includesfunctionsphp)
-- [5. Dados utilizados](#5-dados-utilizados)
-- [6. Comandos e exemplos](#6-como-os-principais-comandos-funcionam)
-- [7. Executar o projeto](#7-executar-o-projeto)
-- [8. Limitações atuais](#8-características-e-limitações-da-versão-atual)
-- [9. Conferência manual](#9-roteiro-de-conferência-manual)
-- [10. Histórico e backup](#10-histórico-e-cópia-do-projeto)
-- [11. Dúvidas frequentes](#11-dúvidas-frequentes)
-- [12. Roteiro de estudo](#12-roteiro-de-estudo)
+1. [Visão geral](#1-visao-geral)
+2. [Preparação e execução](#2-preparacao)
+3. [Estrutura e fluxo de dados](#3-estrutura)
+4. [Referência das páginas](#4-paginas)
+5. [Banco de dados e funções](#5-dados)
+6. [Conceitos usados no código](#6-conceitos)
+7. [Exemplos explicados](#7-exemplos)
+8. [Conferência manual](#8-testes)
+9. [Dúvidas frequentes](#9-duvidas)
+10. [Limitações da versão atual](#10-limitacoes)
+11. [Histórico e backup](#11-backup)
+12. [Roteiro de estudo](#12-estudo)
 
-## 1. Objetivo
+---
+
+<a id="1-visao-geral"></a>
+
+## 1. Visão geral
 
 A Impulso Cursos é uma empresa fictícia de educação. O sistema apresenta os cursos e permite cadastrar, consultar, atualizar e excluir alunos. Os usuários que acessam a gestão fazem login com e-mail e senha.
 
 Esta documentação descreve os 16 arquivos PHP presentes no projeto. As informações sobre o banco são baseadas nas consultas do código, não em uma inspeção da estrutura do servidor.
 
-## 2. Tecnologias
+### Tecnologias utilizadas
 
 | Tecnologia | Utilização |
 | --- | --- |
@@ -33,7 +50,32 @@ Esta documentação descreve os 16 arquivos PHP presentes no projeto. As informa
 | PDO | Conexão do PHP com o PostgreSQL e execução das consultas. |
 | PostgreSQL | Armazenamento dos alunos e usuários. |
 
-## 3. Arquivos PHP
+---
+
+<a id="2-preparacao"></a>
+
+## 2. Preparação e execução
+
+1. Tenha PHP com PDO e o driver PostgreSQL habilitados.
+2. Tenha acesso ao servidor PostgreSQL e às tabelas necessárias.
+3. Confira a configuração em `database/connect_postgres.php`.
+4. Mantenha a pasta do projeto com o nome `mini_sistema`, usado nos links.
+5. Abra o terminal na pasta que contém `mini_sistema` e execute:
+
+```powershell
+php -S localhost:8000
+```
+
+6. Abra `http://localhost:8000/mini_sistema/index.php`.
+7. Faça login para acessar as páginas de gestão.
+
+Abrir o PHP diretamente como arquivo no navegador não executa o código. O servidor PHP precisa estar rodando.
+
+---
+
+<a id="3-estrutura"></a>
+
+## 3. Estrutura e fluxo de dados
 
 ```text
 mini_sistema/
@@ -81,11 +123,17 @@ flowchart LR
 
 Esse diagrama resume as operações protegidas. Algumas páginas carregam a conexão antes de verificar o usuário, mas a operação do formulário ocorre depois da verificação. O navegador exibe o HTML gerado; as consultas SQL são executadas pelo PHP no servidor.
 
-### Página inicial
+---
+
+<a id="4-paginas"></a>
+
+## 4. Referência das páginas
+
+### 4.1. Página inicial
 
 **`index.php`** inicia a sessão e inclui o cabeçalho e o rodapé. Apresenta o nome da empresa, o slogan e três cartões: Informática Básica, Inglês e Administração. Os textos e as durações estão escritos no HTML; não são carregados do banco. A página não exige login.
 
-### Pasta `includes`
+### 4.2. Componentes compartilhados
 
 | Arquivo | Função |
 | --- | --- |
@@ -94,11 +142,11 @@ Esse diagrama resume as operações protegidas. Algumas páginas carregam a cone
 | `session.php` | Verifica se existe uma sessão ativa e chama `session_start()` quando necessário. |
 | `functions.php` | Carrega a conexão com o banco e reúne as funções de cadastro, consulta, atualização, exclusão e busca de usuários. |
 
-### Pasta `database`
+### 4.3. Conexão com o banco
 
 **`connect_postgres.php`** define host, nome do banco, usuário e senha e cria o objeto `$conexao` com `new PDO(...)`. O banco configurado no código é `escola`. Se ocorrer uma exceção de conexão, o bloco `catch` mostra a mensagem de erro. As credenciais devem ser consultadas no próprio arquivo; não são repetidas aqui.
 
-### Pasta `login`
+### 4.4. Acesso e sessão
 
 | Arquivo | Funcionamento |
 | --- | --- |
@@ -107,11 +155,11 @@ Esse diagrama resume as operações protegidas. Algumas páginas carregam a cone
 | `verificar_user.php` | Verifica a sessão. Se `$_SESSION['id']` não existir, redireciona para o login e encerra a execução com `exit()`. |
 | `logout.php` | Limpa os dados de sessão, destrói a sessão e redireciona para `/mini_sistema/index.php`. |
 
-### Pasta `app`
+### 4.5. Gestão de alunos
 
 Todas as páginas PHP dessa pasta incluem a verificação de login.
 
-**`create.php` — Cadastro de aluno**
+#### `create.php` — Cadastro de aluno
 
 Mostra os campos nome, turma, e-mail, nascimento e situação ativa. A turma é escolhida em um `select`:
 
@@ -123,13 +171,13 @@ Mostra os campos nome, turma, e-mail, nascimento e situação ativa. A turma é 
 
 Ao receber POST, a própria página prepara e executa um `INSERT INTO alunos`. Depois mostra “Aluno cadastrado com sucesso!”. Embora exista a função `cadastrar()`, esta página executa o cadastro diretamente.
 
-**`select.php` — Relatório**
+#### `select.php` — Relatório
 
 Chama `listarAlunos()` e percorre os resultados com `foreach`. Mostra uma tabela com ID, nome, nascimento, turma, e-mail, situação e ações. A consulta usa `ORDER BY id ASC`, organizando os alunos do menor ID para o maior. Sem registros, mostra “Nenhum aluno cadastrado”.
 
 Cada botão Editar pertence a um formulário que envia o ID por POST para `update.php`. O ID vai em um campo `hidden`, que não aparece na tela.
 
-**`update.php` — Edição**
+#### `update.php` — Edição
 
 1. Recebe o ID enviado pelo relatório ou pela busca da própria página.
 2. Executa um SELECT para carregar o aluno.
@@ -139,7 +187,7 @@ Cada botão Editar pertence a um formulário que envia o ID por POST para `updat
 
 A confirmação exibida é “ALUNO ATUALIZADO COM SUCESSO! VOLTE AO RELATÓRIO PARA CONFERIR.”. Não há redirecionamento automático ao relatório. O botão Restaurar campos repõe os valores com que o formulário foi carregado, sem alterar o banco.
 
-**`delete.php` — Exclusão com confirmação**
+#### `delete.php` — Exclusão com confirmação
 
 1. O usuário informa o ID e clica em Continuar para exclusão.
 2. A página busca o aluno e mostra ID, nome e turma.
@@ -148,15 +196,34 @@ A confirmação exibida é “ALUNO ATUALIZADO COM SUCESSO! VOLTE AO RELATÓRIO 
 
 Cancelar abre `delete.php` sem enviar o formulário de confirmação. Se o aluno não existir, a página mostra “Aluno não encontrado”. Depois de apagar, volta a mostrar o campo de busca. No código atual, o campo de ID aceita de 1 a 255 no navegador.
 
-**`select_w_w.php` — Consulta por ID**
+#### `select_w_w.php` — Consulta por ID
 
 É a página aberta pelo menu Consultar. Recebe o ID por POST e chama `read_w_w()` quando o valor é menor que 2147483647. Mostra os dados encontrados ou uma mensagem de ausência de registro. O link Consultas RL abre o relatório.
 
-**`select_w.php` — Consulta com ID fixo**
+#### `select_w.php` — Consulta com ID fixo
 
 Define `$id = 7` no código e chama `Consultar()`. Não é a página ligada ao menu Consultar e não tem formulário para escolher outro ID.
 
-## 4. Funções de `includes/functions.php`
+---
+
+<a id="5-dados"></a>
+
+## 5. Banco de dados e funções
+
+### 5.1. Dados utilizados
+
+O código utiliza duas tabelas distintas:
+
+| Tabela | Campos usados | Finalidade |
+| --- | --- | --- |
+| `alunos` | `id`, `nome`, `nasc`, `turma`, `ativo`, `email` | Cadastro dos alunos. |
+| `usuarios` | `id`, `email`, `senha` | Contas de acesso ao sistema. |
+
+O ID identifica cada registro. O campo `ativo` representa a situação do aluno; ele não determina se um usuário pode fazer login. As turmas são valores gravados em `alunos.turma`, sem uma tabela de cursos usada pelo código atual.
+
+### 5.2. Funções de acesso aos dados
+
+Arquivo: [includes/functions.php](includes/functions.php).
 
 | Função | O que faz |
 | --- | --- |
@@ -169,18 +236,11 @@ Define `$id = 7` no código e chama `Consultar()`. Não é a página ligada ao m
 | `cadastrar_user($conexao, $email, $senha)` | Insere os dados de acesso na tabela `usuarios`. |
 | `consultar_user($conexao, $email)` | Busca ID, e-mail e senha e retorna o usuário para o login. |
 
-## 5. Dados utilizados
+---
 
-O código utiliza duas tabelas distintas:
+<a id="6-conceitos"></a>
 
-| Tabela | Campos usados | Finalidade |
-| --- | --- | --- |
-| `alunos` | `id`, `nome`, `nasc`, `turma`, `ativo`, `email` | Cadastro dos alunos. |
-| `usuarios` | `id`, `email`, `senha` | Contas de acesso ao sistema. |
-
-O ID identifica cada registro. O campo `ativo` representa a situação do aluno; ele não determina se um usuário pode fazer login. As turmas são valores gravados em `alunos.turma`, sem uma tabela de cursos usada pelo código atual.
-
-## 6. Como os principais comandos funcionam
+## 6. Conceitos usados no código
 
 - `include`: inclui um arquivo, como o cabeçalho ou rodapé.
 - `require_once`: carrega um arquivo necessário apenas uma vez na execução.
@@ -200,7 +260,13 @@ O ID identifica cada registro. O campo `ativo` representa a situação do aluno;
 
 No HTML, `label` identifica o campo; `input` recebe um valor; `select` apresenta opções. O atributo `required` pede ao navegador que exija preenchimento. A classe CSS liga um elemento a regras de aparência: `class="course-card"`, por exemplo, identifica os cartões dos cursos.
 
-### Exemplo 1: do campo do formulário ao PHP
+---
+
+<a id="7-exemplos"></a>
+
+## 7. Exemplos explicados
+
+### 7.1. do campo do formulário ao PHP
 
 Trecho do cadastro:
 
@@ -216,7 +282,7 @@ Trecho do cadastro:
 
 `for="turma"` conecta o texto do label ao campo que tem `id="turma"`. Já `name="turma"` define o nome enviado ao PHP. Ao escolher Inglês, o navegador envia o valor `ING-01`, que fica disponível em `$_POST['turma']`. O texto completo da opção é apenas o que o usuário vê.
 
-### Exemplo 2: buscar um aluno no banco
+### 7.2. buscar um aluno no banco
 
 Trecho usado na página de exclusão, depois que o ID é recebido:
 
@@ -238,7 +304,7 @@ $aluno = $stmt->fetch(PDO::FETCH_ASSOC);
 
 Quando a busca encontra um aluno, `$aluno['nome']` acessa seu nome. A chave `nome` corresponde à coluna retornada pelo banco.
 
-### Exemplo 3: por que buscar não exclui?
+### 7.3. por que buscar não exclui?
 
 A primeira etapa só envia o ID. O formulário seguinte contém este botão:
 
@@ -269,7 +335,7 @@ flowchart TD
     G --> H[Mostrar mensagem e formulário inicial]
 ```
 
-### Exemplo 4: buscar para editar é diferente de salvar
+### 7.4. buscar para editar é diferente de salvar
 
 O botão Editar do relatório envia somente o ID. A página carrega os dados, mas não altera o banco nessa etapa. Quando o formulário preenchido é enviado, chega também o campo `nome`:
 
@@ -284,7 +350,7 @@ if ($aluno && isset($_POST['nome'])) {
 
 A função faz o UPDATE. As duas linhas seguintes repetem a consulta SELECT preparada anteriormente e recuperam os dados salvos. Por isso, continuar no formulário preenchido depois de atualizar é esperado.
 
-### Exemplo 5: HTML e CSS no cartão de um curso
+### 7.5. HTML e CSS no cartão de um curso
 
 ```html
 <article class="course-card">
@@ -296,7 +362,7 @@ A função faz o UPDATE. As duas linhas seguintes repetem a consulta SELECT prep
 
 `article` agrupa o conteúdo de um curso; `h3` é o título e `p` cria um parágrafo. A classe `course-card` permite aplicar as regras de `.course-card` no CSS. O texto apareceria mesmo sem essa classe: ela organiza a aparência, não cria as palavras.
 
-### Caminho de arquivo e endereço do navegador
+### 7.6. Caminho de arquivo e endereço do navegador
 
 ```php
 require_once __DIR__ . '/../includes/functions.php';
@@ -311,37 +377,11 @@ exit();
 
 Esse endereço é enviado ao navegador. `exit()` impede que o restante da página continue sendo executado após o redirecionamento.
 
-## 7. Executar o projeto
+---
 
-1. Tenha PHP com PDO e o driver PostgreSQL habilitados.
-2. Tenha acesso ao servidor PostgreSQL e às tabelas necessárias.
-3. Confira a configuração em `database/connect_postgres.php`.
-4. Mantenha a pasta do projeto com o nome `mini_sistema`, usado nos links.
-5. Abra o terminal na pasta que contém `mini_sistema` e execute:
+<a id="8-testes"></a>
 
-```powershell
-php -S localhost:8000
-```
-
-6. Abra `http://localhost:8000/mini_sistema/index.php`.
-7. Faça login para acessar as páginas de gestão.
-
-Abrir o PHP diretamente como arquivo no navegador não executa o código. O servidor PHP precisa estar rodando.
-
-## 8. Características e limitações da versão atual
-
-- As senhas dos usuários são gravadas e comparadas diretamente, sem hash no código atual.
-- O cadastro de usuário chama `header()` depois de produzir HTML e uma mensagem; o redirecionamento pode falhar se a saída já tiver sido enviada.
-- Parte da validação está apenas no navegador. Os limites de ID também diferem entre as páginas: a exclusão limita o formulário a 255.
-- O cadastro usa uma lista de turmas, mas a edição ainda permite texto livre para turma.
-- As páginas de consulta individual escrevem alguns dados diretamente com `echo`, enquanto o relatório e a edição utilizam `htmlspecialchars`.
-- A confirmação da exclusão depende do campo POST `confirmar`; não existe um token de proteção contra envio de formulário por outro site.
-- Atualização e exclusão não conferem a quantidade de linhas afetadas antes de mostrar suas mensagens de sucesso.
-- Atualizar a página após um POST pode solicitar o reenvio do formulário, pois não há redirecionamento após todas as operações.
-
-Essas observações descrevem a implementação encontrada; gerar esta documentação não modifica esses comportamentos.
-
-## 9. Roteiro de conferência manual
+## 8. Conferência manual
 
 | Ação | Resultado esperado |
 | --- | --- |
@@ -358,10 +398,11 @@ Essas observações descrevem a implementação encontrada; gerar esta documenta
 
 Este roteiro é uma orientação de teste, não um registro de testes executados durante a documentação.
 
-## 10. Histórico e cópia do projeto
+---
 
-O Git registra versões dos arquivos e o GitHub pode armazenar uma cópia do repositório. É necessário fazer commit e push após novas alterações para atualizar essa cópia. Os registros do PostgreSQL não são incluídos automaticamente: precisam de backup próprio.
-## 11. Dúvidas frequentes
+<a id="9-duvidas"></a>
+
+## 9. Dúvidas frequentes
 
 | Situação | Explicação e verificação |
 | --- | --- |
@@ -372,7 +413,36 @@ O Git registra versões dos arquivos e o GitHub pode armazenar uma cópia do rep
 | Não consigo excluir um ID maior que 255 | O formulário de exclusão atual tem `max="255"`. Isso é um limite do formulário, não uma conclusão sobre a capacidade do banco. |
 | O visual antigo continua aparecendo | Atualize com `Ctrl + F5` e confira se o CSS está sendo carregado. |
 | Aparece erro de conexão com o banco | Verifique se o servidor PostgreSQL está acessível e se a conexão está configurada corretamente. |
-| O cadastro de usuário não redireciona | Confira a limitação de envio de cabeçalhos depois do HTML descrita na seção 8. |
+| O cadastro de usuário não redireciona | Confira a limitação de envio de cabeçalhos depois do HTML descrita na [seção 10](#10-limitacoes). |
+
+---
+
+<a id="10-limitacoes"></a>
+
+## 10. Limitações da versão atual
+
+- As senhas dos usuários são gravadas e comparadas diretamente, sem hash no código atual.
+- O cadastro de usuário chama `header()` depois de produzir HTML e uma mensagem; o redirecionamento pode falhar se a saída já tiver sido enviada.
+- Parte da validação está apenas no navegador. Os limites de ID também diferem entre as páginas: a exclusão limita o formulário a 255.
+- O cadastro usa uma lista de turmas, mas a edição ainda permite texto livre para turma.
+- As páginas de consulta individual escrevem alguns dados diretamente com `echo`, enquanto o relatório e a edição utilizam `htmlspecialchars`.
+- A confirmação da exclusão depende do campo POST `confirmar`; não existe um token de proteção contra envio de formulário por outro site.
+- Atualização e exclusão não conferem a quantidade de linhas afetadas antes de mostrar suas mensagens de sucesso.
+- Atualizar a página após um POST pode solicitar o reenvio do formulário, pois não há redirecionamento após todas as operações.
+
+Essas observações descrevem a implementação encontrada; gerar esta documentação não modifica esses comportamentos.
+
+---
+
+<a id="11-backup"></a>
+
+## 11. Histórico e backup
+
+O Git registra versões dos arquivos e o GitHub pode armazenar uma cópia do repositório. É necessário fazer commit e push após novas alterações para atualizar essa cópia. Os registros do PostgreSQL não são incluídos automaticamente: precisam de backup próprio.
+
+---
+
+<a id="12-estudo"></a>
 
 ## 12. Roteiro de estudo
 
