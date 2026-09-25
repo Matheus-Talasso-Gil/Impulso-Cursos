@@ -1,25 +1,25 @@
 <?php
-require_once __DIR__ . '/../includes/session.php'; 
+require_once __DIR__ . '/../includes/session.php';
 require_once __DIR__ . '/../includes/functions.php';
 require_once __DIR__ . '/../login/verificar_user.php';
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8"> <!-- permite usar caracteres especiais e acentos na pagina -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- faz a pagina se adaptar melhor em celular -->
     <title>Cadastro de Aluno</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/style.css"> <!-- puxa o arquivo css que estiliza a pagina -->
 </head>
 <body>
     <?php include __DIR__ . '/../includes/header.php'; ?>
     <main>
         <h1>Matricular aluno</h1>
-        <form action="" method="post">
+        <form action="" method="post"> <!-- envia os dados do formulario para a mesma pagina -->
             <label for="nome">Nome: </label>
             <input type="text" name="nome" id="nome" required><br><br>
             <label for="turma">Turma: </label>
-            <select name="turma" id="turma" required>
+            <select name="turma" id="turma" required> <!-- cria uma lista de turmas para o usuario escolher -->
                 <option value="" selected disabled>Selecione a turma</option>
                 <option value="INF-01">INF-01 — Informática Básica</option>
                 <option value="ING-01">ING-01 — Inglês</option>
@@ -38,17 +38,17 @@ require_once __DIR__ . '/../login/verificar_user.php';
             <input type="reset" value="Limpar">
         </form>
         <?php
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            require_once __DIR__ . '/../database/connect_postgres.php';
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') { // so executa o cadastro quando o formulario for enviado
+            require_once __DIR__ . '/../database/connect_postgres.php'; // conecta com o banco de dados
             $sql = "INSERT INTO alunos  (nome, nasc, turma, ativo, email) 
-                    VALUES   (:nome, :nasc, :turma, :ativo, :email)";
-            $stmt = $conexao->prepare($sql);
-            $stmt->bindParam(":nome", $_POST['nome']);
+                    VALUES   (:nome, :nasc, :turma, :ativo, :email)"; // cria o comando para inserir um novo aluno
+            $stmt = $conexao->prepare($sql); // prepara o comando antes de enviar para o banco
+            $stmt->bindParam(":nome", $_POST['nome']); // liga os dados do formulario aos parametros do sql
             $stmt->bindParam(":nasc", $_POST['nasc']);
             $stmt->bindParam(":turma", $_POST['turma']);
             $stmt->bindParam(":ativo", $_POST['ativo']);
             $stmt->bindParam(":email", $_POST['email']);
-            $stmt->execute();
+            $stmt->execute(); // executa o cadastro no banco
             echo "Aluno cadastrado com sucesso!";
         }
         ?>
