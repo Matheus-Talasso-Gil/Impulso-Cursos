@@ -28,13 +28,13 @@ nav a {
 nav a:hover { background: #304966; }
 nav a[href$="/login/login.php"]:hover { background: #15803d; }
 nav a[href$="/login/logout.php"]:hover { background: #b91c1c; }
-nav a:focus-visible { outline: 3px solid #ffb36b; outline-offset: 3px; }
+nav a:focus-visible { outline: 3px solid #172d4b; outline-offset: 3px; }
 nav > div { margin-left: auto; display: flex; gap: 8px; }
 main { width: min(100% - 40px, 1040px); margin: 64px auto; flex: 1; }
 article {
     background: #fff;
     border: 1px solid #e1e7ef;
-    border-top: 5px solid #e88935;
+    border-top: 5px solid #172d4b;
     border-radius: 12px;
     padding: clamp(24px, 5vw, 56px);
     box-shadow: 0 8px 28px rgba(23, 45, 75, .06);
