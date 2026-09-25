@@ -1,0 +1,124 @@
+* { box-sizing: border-box; }
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-family: Arial, sans-serif;
+    color: #24344b;
+    background: #f3f6fa;
+    line-height: 1.6;
+}
+header { background: #172d4b; padding: 18px 24px; }
+nav {
+    max-width: 1040px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+nav a {
+    display: inline-block;
+    padding: 8px 12px;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 6px;
+}
+nav a:hover { background: #304966; }
+nav a[href$="/login/login.php"]:hover { background: #15803d; }
+nav a[href$="/login/logout.php"]:hover { background: #b91c1c; }
+nav a:focus-visible { outline: 3px solid #ffb36b; outline-offset: 3px; }
+nav > div { margin-left: auto; display: flex; gap: 8px; }
+main { width: min(100% - 40px, 1040px); margin: 64px auto; flex: 1; }
+article {
+    background: #fff;
+    border: 1px solid #e1e7ef;
+    border-top: 5px solid #e88935;
+    border-radius: 12px;
+    padding: clamp(24px, 5vw, 56px);
+    box-shadow: 0 8px 28px rgba(23, 45, 75, .06);
+}
+article h1 { margin: 0 0 12px; color: #172d4b; font-size: clamp(32px, 5vw, 48px); line-height: 1.2; }
+article h2 { margin: 0 0 24px; font-size: clamp(20px, 3vw, 26px); font-weight: 500; }
+article p { max-width: 720px; margin: 0; color: #526176; font-size: 17px; }
+footer { padding: 24px 20px; border-top: 1px solid #e1e7ef; text-align: center; color: #526176; }
+footer h1 { margin: 0; font-size: 14px; font-weight: 400; }
+@media (max-width: 600px) {
+    header { padding: 12px; }
+    nav { gap: 4px; }
+    nav a { padding: 8px; font-size: 14px; }
+    nav > div { margin-left: 0; }
+    main { margin: 32px auto; }
+}
+/* Páginas internas e formulários */
+main > h1 { margin-top: 0; color: #172d4b; line-height: 1.25; }
+main a { color: #1d568e; text-underline-offset: 3px; }
+form {
+    max-width: 640px;
+    margin: 24px 0;
+    padding: clamp(20px, 4vw, 32px);
+    background: #fff;
+    border: 1px solid #e1e7ef;
+    border-radius: 12px;
+    box-shadow: 0 8px 28px rgba(23, 45, 75, .05);
+}
+form label { font-weight: 600; }
+input, select { font: inherit; }
+input:not([type="radio"]):not([type="submit"]):not([type="reset"]), select {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    margin-top: 6px;
+    padding: 10px 12px;
+    color: #24344b;
+    background: #fff;
+    border: 1px solid #a7b5c6;
+    border-radius: 6px;
+}
+input[type="radio"] { accent-color: #1d568e; margin-left: 12px; }
+input[type="submit"], input[type="reset"] {
+    display: inline-block;
+    margin: 8px 8px 0 0;
+    padding: 10px 20px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+}
+input[type="submit"] { color: #fff; background: #1d568e; }
+input[type="submit"]:hover { background: #172d4b; }
+input[type="reset"] { color: #24344b; background: #e9eef5; }
+input[type="reset"]:hover { background: #dbe3ee; }
+input:focus-visible, select:focus-visible, main a:focus-visible, .table-wrapper:focus-visible {
+    outline: 3px solid #1d568e;
+    outline-offset: 3px;
+}
+.message-error { color: #991b1b; background: #fff1f2; padding: 12px 16px; border-radius: 6px; }
+.table-wrapper { overflow-x: auto; background: #fff; border: 1px solid #e1e7ef; border-radius: 12px; }
+table { border-collapse: collapse; width: 100%; text-align: left; }
+caption { text-align: left; padding: 16px; color: #526176; }
+th, td { padding: 14px 16px; border-bottom: 1px solid #e1e7ef; }
+th { background: #172d4b; color: #fff; }
+tbody tr:nth-child(even) { background: #f3f6fa; }
+tbody tr:last-child td { border-bottom: 0; }
+.courses { margin-top: 40px; }
+.course-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+.course-card { padding: 24px; }
+.course-card h3 { margin: 0 0 12px; font-size: 21px; color: #172d4b; }
+.course-card p { font-size: 16px; }
+.course-card .course-duration { margin-top: 20px; font-weight: 600; color: #24344b; }
+@media (max-width: 760px) {
+    .course-grid { grid-template-columns: 1fr; }
+}
+form.edit-action { margin: 0; padding: 0; border: 0; background: transparent; box-shadow: none; }
+form.edit-action input[type="submit"] { margin: 0; }
+.message-success {
+    color: #166534;
+    background: #dcfce7;
+    border: 1px solid #86efac;
+    border-left: 5px solid #15803d;
+    padding: 16px 20px;
+    border-radius: 6px;
+    font-weight: 700;
+}
