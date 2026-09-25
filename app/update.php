@@ -39,7 +39,7 @@ require_once __DIR__ . '/../includes/functions.php';
     <?php if (!$aluno): ?>
     <form action="" method="post">
         <label for="id">ID do aluno:</label>
-        <input type="number" name="id" id="id" min="1" max="2147483647" required>
+        <input type="number" name="id" id="id" min="1" max="255" required>
         <input type="submit" value="Buscar aluno">
     </form>
     <?php endif; ?>
