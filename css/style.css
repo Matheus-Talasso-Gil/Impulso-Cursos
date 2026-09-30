@@ -54,6 +54,15 @@ footer h1 { margin: 0; font-size: 14px; font-weight: 400; }
 /* Páginas internas e formulários */
 main > h1 { margin-top: 0; color: #172d4b; line-height: 1.25; }
 main a { color: #1d568e; text-underline-offset: 3px; }
+main a.report-link {
+    display: inline-block;
+    padding: 8px 12px;
+    color: #fff;
+    background: #1d568e;
+    border-radius: 6px;
+    text-decoration: none;
+}
+main a.report-link:hover { background: #172d4b; }
 form {
     max-width: 640px;
     margin: 24px 0;
