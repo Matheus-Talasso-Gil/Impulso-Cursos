@@ -26,6 +26,22 @@ O sistema permite cadastrar, consultar, editar e excluir alunos, além de possui
 
 Para abrir e visualizar os arquivos `.excalidraw` no VS Code, instale a extensão Excalidraw.
 
+### Telas
+
+![Tela inicial](prototipos/imagens/tela_inicial.png)
+
+![Tela de login](prototipos/imagens/tela_login.png)
+
+![Tela de cadastro](prototipos/imagens/tela_cadastrar.png)
+
+![Tela de cadastro de aluno](prototipos/imagens/tela_cadastrar_aluno.png)
+
+![Tela de exclusão](prototipos/imagens/tela_excluir.png)
+
+![Tela de confirmação de exclusão](prototipos/imagens/tela_confirmar_exclusao.png)
+
+![Tela de resultado da consulta](prototipos/imagens/tela_resultado_da_consulta.png)
+
 ## Estrutura do projeto
 
 ```text
