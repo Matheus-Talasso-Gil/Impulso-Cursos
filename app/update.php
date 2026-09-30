@@ -69,7 +69,7 @@ require_once __DIR__ . '/../includes/functions.php';
         <input type="reset" value="Restaurar campos">
     </form>
     <?php endif; ?>
-    <p><a href="select.php">Consultar RL</a></p>
+    <p><a class="report-link" href="select.php">Consultar RL</a></p>
 </main>
 <?php include __DIR__ . '/../includes/footer.php'; ?>
 </body>

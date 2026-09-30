@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['id'])) { // verifica s
         <a href="delete.php">Cancelar</a>
     </form>
     <?php endif; ?>
-    <p><a href="select.php">Consultar RL</a></p>
+    <p><a class="report-link" href="select.php">Consultar RL</a></p>
 </main>
 <?php include __DIR__ . '/../includes/footer.php'; ?>
 </body>

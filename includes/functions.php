@@ -102,7 +102,7 @@ function read_w_w($conexao, $id)
     } catch (PDOException $e) {
         echo "Erro: " . $e->getMessage();
     }
-    echo '<br><a href="../index.php">Retorne aqui</a>';
+    echo '<br><a class="report-link" href="../index.php">Retorne aqui</a>';
 }
 function cadastrar_user($conexao, $email, $senha)
 {

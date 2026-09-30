@@ -22,7 +22,7 @@ require_once __DIR__ . '/../login/verificar_user.php';
                 <input type="submit" value="Consultar">
             </form>
         </section>
-        <p><a href="select.php">Consultas RL</a></p>
+        <p><a class="report-link" href="select.php">Consultas RL</a></p>
         <?php
         if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['id'])) { // verifica se o formulario foi enviado e se recebeu um id
             $id = $_POST['id'];
