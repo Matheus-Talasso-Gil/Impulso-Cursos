@@ -381,7 +381,7 @@ Este roteiro é uma orientação de teste, não um registro de testes executados
 
 ## 10. Limitações da versão atual
 
-- As senhas dos usuários são gravadas e comparadas diretamente, sem hash no código atual.
+- Novas senhas são gravadas com `password_hash()` e verificadas com `password_verify()`. Antes de usar, execute `database/ajustar_senha.sql` para ampliar o campo para `VARCHAR(255)`. Senhas antigas em texto precisam ser convertidas ou redefinidas; o login não aceita texto puro armazenado no banco.
 - O cadastro de usuário chama `header()` depois de produzir HTML e uma mensagem; o redirecionamento pode falhar se a saída já tiver sido enviada.
 - Parte da validação está apenas no navegador. Os limites de ID também diferem entre as páginas: a exclusão limita o formulário a 255.
 - O cadastro usa uma lista de turmas, mas a edição ainda permite texto livre para turma.

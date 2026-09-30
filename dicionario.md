@@ -25,10 +25,11 @@ Guarda as contas usadas para entrar no sistema.
 | --- | --- | --- | --- | --- |
 | id | A confirmar | A confirmar | A confirmar | Identificador do usuário, guardado na sessão após o login. |
 | email | A confirmar | A confirmar | A confirmar | E-mail usado para localizar a conta no login. |
-| senha | A confirmar | A confirmar | A confirmar | Senha usada na verificação de acesso. |
+| senha | VARCHAR(255) após aplicar ajustar_senha.sql | A confirmar | A confirmar | Hash da senha, gerado com password_hash() e conferido com password_verify(). |
 
 - Os campos aparecem nas consultas de [functions.php](includes/functions.php).
 - O projeto não inclui o script de criação de `usuarios`. Tipos, tamanhos, chaves e regras de nulidade precisam ser confirmados no banco.
+- Antes de usar o cadastro com hash, execute [ajustar_senha.sql](database/ajustar_senha.sql). Senhas antigas em texto precisam ser convertidas ou redefinidas; não são aceitas pelo novo login.
 
 ## Legenda
 

@@ -106,11 +106,12 @@ function read_w_w($conexao, $id)
 }
 function cadastrar_user($conexao, $email, $senha)
 {
+    $senhaHash = password_hash($senha, PASSWORD_DEFAULT); // gera o hash para não salvar a senha original
     $sql = "INSERT INTO usuarios (email, senha)   VALUES (:email, :senha)";
     try {
         $stmt = $conexao->prepare($sql);
         $stmt->bindParam(":email", $email);
-        $stmt->bindParam(":senha", $senha);
+        $stmt->bindParam(":senha", $senhaHash);
 
         $stmt->execute();
         echo "Usuário inserido com sucesso!";

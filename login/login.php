@@ -4,7 +4,7 @@ require_once __DIR__ . '/../includes/functions.php';
 $erro = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $usuario = consultar_user($conexao, $_POST['email']);
-    if ($usuario && $usuario['email'] == $_POST['email'] && $usuario['senha'] == $_POST['senha']) {
+    if ($usuario && $usuario['email'] == $_POST['email'] && password_verify($_POST['senha'], $usuario['senha'])) { // confere a senha digitada com o hash salvo
         session_regenerate_id(true);
         $_SESSION['id'] = $usuario['id'];
         header('Location: ../index.php');
