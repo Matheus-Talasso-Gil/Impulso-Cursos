@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../includes/session.php';
 require_once __DIR__ . '/../login/verificar_user.php';
 require_once __DIR__ . '/../includes/functions.php';
-$alunos = listarAlunos($conexao);
+$alunos = listarAlunos($conexao); // busca todos os alunos para exibir no relatório
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -27,8 +27,9 @@ $alunos = listarAlunos($conexao);
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($alunos as $aluno): ?>
+                    <?php foreach ($alunos as $aluno): ?> <!-- percorre a lista para criar uma linha por aluno -->
                     <tr>
+                        <!-- protege os dados exibidos contra a execução de código HTML ou JavaScript -->
                         <td><?= htmlspecialchars((string) $aluno['id'], ENT_QUOTES, 'UTF-8') ?></td>
                         <td><?= htmlspecialchars((string) $aluno['nome'], ENT_QUOTES, 'UTF-8') ?></td>
                         <td><?= htmlspecialchars((string) $aluno['nasc'], ENT_QUOTES, 'UTF-8') ?></td>
@@ -36,14 +37,14 @@ $alunos = listarAlunos($conexao);
                         <td><?= htmlspecialchars((string) ($aluno['email'] ?? ''), ENT_QUOTES, 'UTF-8') ?></td>
                         <td><?= $aluno['ativo'] ? 'Ativo' : 'Inativo' ?></td>
                         <td>
-                            <form action="update.php" method="post" class="edit-action">
+                            <form action="update.php" method="post" class="edit-action"> <!-- envia o ID do aluno escolhido para a tela de atualização -->
                                 <input type="hidden" name="id" value="<?= htmlspecialchars((string) $aluno['id'], ENT_QUOTES, 'UTF-8') ?>">
                                 <input type="submit" value="Editar">
                             </form>
                         </td>
                     </tr>
                     <?php endforeach; ?>
-                    <?php if (!$alunos): ?>
+                    <?php if (!$alunos): ?> <!-- mostra uma mensagem quando ainda não há alunos cadastrados -->
                     <tr><td colspan="7">Nenhum aluno cadastrado.</td></tr>
                     <?php endif; ?>
                 </tbody>
