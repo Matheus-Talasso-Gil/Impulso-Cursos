@@ -8,31 +8,29 @@ Guia para executar, compreender e apresentar o projeto de gestão de alunos.
 
 | Quero… | Onde encontrar |
 | --- | --- |
-| Rodar o site no computador | [Preparação e execução](#2-preparacao) |
-| Encontrar a responsabilidade de um arquivo | [Estrutura](#3-estrutura) e [páginas](#4-paginas) |
-| Entender os dados e as consultas | [Banco e funções](#5-dados) |
-| Aprender com exemplos do projeto | [Conceitos](#6-conceitos) e [exemplos](#7-exemplos) |
-| Conferir o funcionamento ou investigar um problema | [Testes](#8-testes) e [dúvidas frequentes](#9-duvidas) |
-| Preparar uma explicação do trabalho | [Roteiro de estudo](#12-estudo) |
+| Rodar o site no computador | [Preparação e execução](#2-preparação-e-execução) |
+| Encontrar a responsabilidade de um arquivo | [Estrutura](#3-estrutura-e-fluxo-de-dados) e [páginas](#4-referência-das-páginas) |
+| Entender os dados e as consultas | [Banco e funções](#5-banco-de-dados-e-funções) |
+| Aprender com exemplos do projeto | [Conceitos](#6-conceitos-usados-no-código) e [exemplos](#7-exemplos-explicados) |
+| Conferir o funcionamento ou investigar um problema | [Testes](#8-conferência-manual) e [dúvidas frequentes](#9-dúvidas-frequentes) |
+| Preparar uma explicação do trabalho | [Roteiro de estudo](#12-roteiro-de-estudo) |
 
 ## Sumário
 
-1. [Visão geral](#1-visao-geral)
-2. [Preparação e execução](#2-preparacao)
-3. [Estrutura e fluxo de dados](#3-estrutura)
-4. [Referência das páginas](#4-paginas)
-5. [Banco de dados e funções](#5-dados)
-6. [Conceitos usados no código](#6-conceitos)
-7. [Exemplos explicados](#7-exemplos)
-8. [Conferência manual](#8-testes)
-9. [Dúvidas frequentes](#9-duvidas)
-10. [Limitações da versão atual](#10-limitacoes)
-11. [Histórico e backup](#11-backup)
-12. [Roteiro de estudo](#12-estudo)
+1. [Visão geral](#1-visão-geral)
+2. [Preparação e execução](#2-preparação-e-execução)
+3. [Estrutura e fluxo de dados](#3-estrutura-e-fluxo-de-dados)
+4. [Referência das páginas](#4-referência-das-páginas)
+5. [Banco de dados e funções](#5-banco-de-dados-e-funções)
+6. [Conceitos usados no código](#6-conceitos-usados-no-código)
+7. [Exemplos explicados](#7-exemplos-explicados)
+8. [Conferência manual](#8-conferência-manual)
+9. [Dúvidas frequentes](#9-dúvidas-frequentes)
+10. [Limitações da versão atual](#10-limitações-da-versão-atual)
+11. [Histórico e backup](#11-histórico-e-backup)
+12. [Roteiro de estudo](#12-roteiro-de-estudo)
 
 ---
-
-<a id="1-visao-geral"></a>
 
 ## 1. Visão geral
 
@@ -52,8 +50,6 @@ Esta documentação descreve os 16 arquivos PHP presentes no projeto. As informa
 
 ---
 
-<a id="2-preparacao"></a>
-
 ## 2. Preparação e execução
 
 1. Tenha PHP com PDO e o driver PostgreSQL habilitados.
@@ -62,9 +58,9 @@ Esta documentação descreve os 16 arquivos PHP presentes no projeto. As informa
 4. Mantenha a pasta do projeto com o nome `mini_sistema`, usado nos links.
 5. Abra o terminal na pasta que contém `mini_sistema` e execute:
 
-```powershell
-php -S localhost:8000
-```
+   ```powershell
+   php -S localhost:8000
+   ```
 
 6. Abra `http://localhost:8000/mini_sistema/index.php`.
 7. Faça login para acessar as páginas de gestão.
@@ -72,8 +68,6 @@ php -S localhost:8000
 Abrir o PHP diretamente como arquivo no navegador não executa o código. O servidor PHP precisa estar rodando.
 
 ---
-
-<a id="3-estrutura"></a>
 
 ## 3. Estrutura e fluxo de dados
 
@@ -100,7 +94,7 @@ mini_sistema/
 ├── database/
 │   └── connect_postgres.php     # Conexão PDO
 ├── css/
-│   └── style.css               # Estilos compartilhados
+│   └── style.css                # Estilos compartilhados
 ├── README.md
 └── documentacao.md
 ```
@@ -109,23 +103,11 @@ A árvore destaca os arquivos explicados neste guia; arquivos auxiliares de SQL 
 
 ### Como uma página recebe e devolve informações
 
-```mermaid
-flowchart LR
-    A[Formulário no navegador] -->|POST| B[Página PHP]
-    B --> C[Verificação da sessão]
-    C -->|Usuário autenticado| D[Consulta usando PDO]
-    D --> E[(PostgreSQL)]
-    E --> F[Resultado da consulta]
-    F --> G[PHP monta o HTML]
-    G --> H[Navegador mostra a resposta]
-    C -->|Sem login| I[Página de login]
-```
+Veja o [fluxo de uma requisição](diagrama.md#fluxo-de-uma-requisição).
 
 Esse diagrama resume as operações protegidas. Algumas páginas carregam a conexão antes de verificar o usuário, mas a operação do formulário ocorre depois da verificação. O navegador exibe o HTML gerado; as consultas SQL são executadas pelo PHP no servidor.
 
 ---
-
-<a id="4-paginas"></a>
 
 ## 4. Referência das páginas
 
@@ -157,7 +139,7 @@ Esse diagrama resume as operações protegidas. Algumas páginas carregam a cone
 
 ### 4.5. Gestão de alunos
 
-Todas as páginas PHP dessa pasta incluem a verificação de login.
+Todas as páginas PHP da pasta `app/` incluem a verificação de login.
 
 #### `create.php` — Cadastro de aluno
 
@@ -165,9 +147,9 @@ Mostra os campos nome, turma, e-mail, nascimento e situação ativa. A turma é 
 
 | Valor enviado | Opção exibida |
 | --- | --- |
-| `INF-01` | Informática Básica |
-| `ING-01` | Inglês |
-| `ADM-01` | Administração |
+| `INF-01` | INF-01 — Informática Básica |
+| `ING-01` | ING-01 — Inglês |
+| `ADM-01` | ADM-01 — Administração |
 
 Ao receber POST, a própria página prepara e executa um `INSERT INTO alunos`. Depois mostra “Aluno cadastrado com sucesso!”. Embora exista a função `cadastrar()`, esta página executa o cadastro diretamente.
 
@@ -206,8 +188,6 @@ Define `$id = 7` no código e chama `Consultar()`. Não é a página ligada ao m
 
 ---
 
-<a id="5-dados"></a>
-
 ## 5. Banco de dados e funções
 
 ### 5.1. Dados utilizados
@@ -238,8 +218,6 @@ Arquivo: [includes/functions.php](includes/functions.php).
 
 ---
 
-<a id="6-conceitos"></a>
-
 ## 6. Conceitos usados no código
 
 - `include`: inclui um arquivo, como o cabeçalho ou rodapé.
@@ -262,11 +240,9 @@ No HTML, `label` identifica o campo; `input` recebe um valor; `select` apresenta
 
 ---
 
-<a id="7-exemplos"></a>
-
 ## 7. Exemplos explicados
 
-### 7.1. do campo do formulário ao PHP
+### 7.1. Do campo do formulário ao PHP
 
 Trecho do cadastro:
 
@@ -280,9 +256,9 @@ Trecho do cadastro:
 </select>
 ```
 
-`for="turma"` conecta o texto do label ao campo que tem `id="turma"`. Já `name="turma"` define o nome enviado ao PHP. Ao escolher Inglês, o navegador envia o valor `ING-01`, que fica disponível em `$_POST['turma']`. O texto completo da opção é apenas o que o usuário vê.
+`for="turma"` conecta o texto do `label` ao campo que tem `id="turma"`. Já `name="turma"` define o nome enviado ao PHP. Ao escolher Inglês, o navegador envia o valor `ING-01`, que fica disponível em `$_POST['turma']`. O texto completo da opção é apenas o que o usuário vê.
 
-### 7.2. buscar um aluno no banco
+### 7.2. Buscar um aluno no banco
 
 Trecho usado na página de exclusão, depois que o ID é recebido:
 
@@ -304,7 +280,7 @@ $aluno = $stmt->fetch(PDO::FETCH_ASSOC);
 
 Quando a busca encontra um aluno, `$aluno['nome']` acessa seu nome. A chave `nome` corresponde à coluna retornada pelo banco.
 
-### 7.3. por que buscar não exclui?
+### 7.3. Por que buscar não exclui?
 
 A primeira etapa só envia o ID. O formulário seguinte contém este botão:
 
@@ -323,19 +299,9 @@ if (isset($_POST['confirmar'])) {
 
 `isset` identifica o campo enviado pelo botão de confirmação. A atribuição `$aluno = false` faz a página voltar a mostrar o formulário de busca; quem remove o registro é a função `apagar()`, não essa atribuição.
 
-```mermaid
-flowchart TD
-    A[Informar ID] --> B[Buscar aluno]
-    B --> C{Encontrou?}
-    C -->|Não| D[Mostrar aluno não encontrado]
-    C -->|Sim| E[Mostrar nome e turma]
-    E --> F{Escolha do usuário}
-    F -->|Cancelar| A
-    F -->|Confirmar exclusão| G[Executar DELETE]
-    G --> H[Mostrar mensagem e formulário inicial]
-```
+Veja o [diagrama de exclusão com confirmação](diagrama.md#exclusão-com-confirmação).
 
-### 7.4. buscar para editar é diferente de salvar
+### 7.4. Buscar para editar é diferente de salvar
 
 O botão Editar do relatório envia somente o ID. A página carrega os dados, mas não altera o banco nessa etapa. Quando o formulário preenchido é enviado, chega também o campo `nome`:
 
@@ -379,8 +345,6 @@ Esse endereço é enviado ao navegador. `exit()` impede que o restante da págin
 
 ---
 
-<a id="8-testes"></a>
-
 ## 8. Conferência manual
 
 | Ação | Resultado esperado |
@@ -400,8 +364,6 @@ Este roteiro é uma orientação de teste, não um registro de testes executados
 
 ---
 
-<a id="9-duvidas"></a>
-
 ## 9. Dúvidas frequentes
 
 | Situação | Explicação e verificação |
@@ -413,11 +375,9 @@ Este roteiro é uma orientação de teste, não um registro de testes executados
 | Não consigo excluir um ID maior que 255 | O formulário de exclusão atual tem `max="255"`. Isso é um limite do formulário, não uma conclusão sobre a capacidade do banco. |
 | O visual antigo continua aparecendo | Atualize com `Ctrl + F5` e confira se o CSS está sendo carregado. |
 | Aparece erro de conexão com o banco | Verifique se o servidor PostgreSQL está acessível e se a conexão está configurada corretamente. |
-| O cadastro de usuário não redireciona | Confira a limitação de envio de cabeçalhos depois do HTML descrita na [seção 10](#10-limitacoes). |
+| O cadastro de usuário não redireciona | Confira a limitação de envio de cabeçalhos depois do HTML descrita na [seção 10](#10-limitações-da-versão-atual). |
 
 ---
-
-<a id="10-limitacoes"></a>
 
 ## 10. Limitações da versão atual
 
@@ -434,15 +394,11 @@ Essas observações descrevem a implementação encontrada; gerar esta documenta
 
 ---
 
-<a id="11-backup"></a>
-
 ## 11. Histórico e backup
 
 O Git registra versões dos arquivos e o GitHub pode armazenar uma cópia do repositório. É necessário fazer commit e push após novas alterações para atualizar essa cópia. Os registros do PostgreSQL não são incluídos automaticamente: precisam de backup próprio.
 
 ---
-
-<a id="12-estudo"></a>
 
 ## 12. Roteiro de estudo
 
