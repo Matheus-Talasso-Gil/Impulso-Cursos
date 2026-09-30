@@ -48,10 +48,10 @@ function Consultar($conexao, $id)
     $aluno = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($aluno) {
-        echo "Aluno: {$aluno['nome']}<br>";
-        echo "Turma: {$aluno['turma']}<br>";
-        echo "E-mail: {$aluno['email']}<br>";
-        echo "Nasc: {$aluno['nasc']}<br>";
+        echo 'Aluno: ' . htmlspecialchars((string) $aluno['nome'], ENT_QUOTES, 'UTF-8') . '<br>';
+        echo 'Turma: ' . htmlspecialchars((string) $aluno['turma'], ENT_QUOTES, 'UTF-8') . '<br>';
+        echo 'E-mail: ' . htmlspecialchars((string) $aluno['email'], ENT_QUOTES, 'UTF-8') . '<br>';
+        echo 'Nasc: ' . htmlspecialchars((string) $aluno['nasc'], ENT_QUOTES, 'UTF-8') . '<br>';
         echo "Ativo: " . ($aluno['ativo'] ? "SIM" : "NÃO") . "<br>";
     } else {
         echo "Aluno não encontrado.";
@@ -90,11 +90,11 @@ function read_w_w($conexao, $id)
         $aluno = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($aluno !== false) { 
             echo "<hr>";
-            echo "ID:" . $aluno['id'] . '<br>';
-            echo "Aluno:" . $aluno['nome'] . '<br>';
-            echo "Turma:" . $aluno['turma'] . '<br>';
-            echo "Email:" . $aluno['email'] . '<br>';
-            echo "Data de Nascimento:" . $aluno['nasc'] . '<br>';
+            echo "ID:" . htmlspecialchars((string) $aluno['id'], ENT_QUOTES, 'UTF-8') . '<br>';
+            echo "Aluno:" . htmlspecialchars((string) $aluno['nome'], ENT_QUOTES, 'UTF-8') . '<br>';
+            echo "Turma:" . htmlspecialchars((string) $aluno['turma'], ENT_QUOTES, 'UTF-8') . '<br>';
+            echo "Email:" . htmlspecialchars((string) $aluno['email'], ENT_QUOTES, 'UTF-8') . '<br>';
+            echo "Data de Nascimento:" . htmlspecialchars((string) $aluno['nasc'], ENT_QUOTES, 'UTF-8') . '<br>';
             echo "Status: " . ($aluno['ativo'] ? "Ativo" : "Inativo");
         } else {
             echo "Nenhum registro encontrado.";
