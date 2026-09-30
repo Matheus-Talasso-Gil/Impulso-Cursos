@@ -22,6 +22,10 @@ O sistema permite cadastrar, consultar, editar e excluir alunos, além de possui
 - Git
 - GitHub
 
+## Protótipos
+
+Para abrir e visualizar os arquivos `.excalidraw` no VS Code, instale a extensão Excalidraw.
+
 ## Estrutura do projeto
 
 ```text
