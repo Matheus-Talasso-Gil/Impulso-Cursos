@@ -9,4 +9,8 @@ $stmt = $conexao->query("SELECT COUNT(*) AS grupos_duplicados FROM (SELECT email
 print_r($stmt->fetch(PDO::FETCH_ASSOC));
 $stmt = $conexao->query('SELECT id, email, senha FROM usuarios ORDER BY id');
 $grupos = [];
-
+foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $usuario) {
+    $email = $usuario['email'];
+    if (!isset($grupos[$email])) $grupos[$email] = count($grupos) + 1;
+    echo 'id=' . $usuario['id'] . ' grupo_email=' . $grupos[$email] . ' formato=' . password_get_info($usuario['senha'])['algoName'] . PHP_EOL;
+}
