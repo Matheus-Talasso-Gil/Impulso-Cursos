@@ -30,31 +30,31 @@ Para abrir e visualizar os arquivos `.excalidraw` no VS Code, instale a extensã
 
 #### Tela inicial
 
-<img src="prototipos/imagens/tela_inicial.png"alt="Tela inicial" width="420">
+![Tela inicial](prototipos/imagens/tela_inicial.png)
 
 #### Tela de login
 
-<img src="prototipos/imagens/tela_login.png"alt="Tela de login" width="420">
+![Tela de login](prototipos/imagens/tela_login.png)
 
 #### Tela de cadastro
 
-<img src="prototipos/imagens/tela_cadastrar.png"alt="Tela de cadastro" width="420">
+![Tela de cadastro](prototipos/imagens/tela_cadastrar.png)
 
 #### Tela de cadastro de aluno
 
-<img src="prototipos/imagens/tela_cadastrar_aluno.png"alt="Tela de cadastro de aluno" width="420">
+![Tela de cadastro de aluno](prototipos/imagens/tela_cadastrar_aluno.png)
 
 #### Tela de exclusão
 
-<img src="prototipos/imagens/tela_excluir.png"alt="Tela de exclusão" width="420">
+![Tela de exclusão](prototipos/imagens/tela_excluir.png)
 
 #### Tela de confirmação de exclusão
 
-<img src="prototipos/imagens/tela_confirmar_exclusao.png"alt="Tela de confirmação de exclusão" width="420">
+![Tela de confirmação de exclusão](prototipos/imagens/tela_confirmar_exclusao.png)
 
 #### Tela de resultado da consulta
 
-<img src="prototipos/imagens/tela_resultado_da_consulta.png"alt="Tela de resultado da consulta" width="420">
+![Tela de resultado da consulta](prototipos/imagens/tela_resultado_da_consulta.png)
 
 ## Estrutura do projeto
 
