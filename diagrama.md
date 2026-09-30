@@ -29,3 +29,32 @@ erDiagram
         php verificar_user "Verificar sessão"
         php logout "Sair"
     }
+
+        includes {
+        php session "Iniciar sessão"
+        php header "Menu"
+        php footer "Rodapé"
+        php functions "Funções de alunos e usuários"
+    }
+
+    database {
+        php connect_postgres "Conexão PDO com PostgreSQL"
+    }
+
+    css {
+        css style "Estilos do sistema"
+    }
+
+    index ||--|| includes : "usa"
+    index ||--|| css : "usa"
+    app ||--|| login : "verifica sessão"
+    app ||--|| includes : "usa"
+    login ||--|| includes : "usa"
+    includes ||--|| database : "carrega conexão"
+    app ||--|| database : "executa SQL"
+    login ||--|| database : "conecta no cadastro"
+    app ||--|| css : "usa"
+    login ||--|| css : "usa"
+    database ||--|| PostgreSQL : "conecta"
+```
+
