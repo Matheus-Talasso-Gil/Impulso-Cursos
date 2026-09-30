@@ -1,18 +1,82 @@
 # Impulso Cursos
 
-Projeto fictício de gestão de alunos em PHP e PostgreSQL, com cadastro, consulta, relatório, edição, exclusão e login.
+Projeto fictício de gestão de alunos feito com PHP e PostgreSQL.
 
-## Executar localmente
+O sistema permite cadastrar, consultar, editar e excluir alunos, além de possuir sistema de login.
 
-1. Instale PHP com a extensão PDO PostgreSQL habilitada e tenha acesso a um servidor PostgreSQL.
-2. Mantenha o projeto em uma pasta chamada `mini_sistema`, pois os links usam esse caminho.
-3. Confira os dados de conexão em `database/connect_postgres.php` e ajuste-os se usar outro servidor. Esse arquivo faz parte do repositório.
-4. Configure um banco com as tabelas `alunos` e `usuarios` compatíveis com o projeto ou restaure seu backup do PostgreSQL. O SQL em `app/` é um rascunho, não uma migração completa.
-5. Na pasta que contém `mini_sistema`, execute `php -S localhost:8000`.
-6. Acesse `http://localhost:8000/mini_sistema/index.php`.
+## Funcionalidades
 
-## Salvar novas alterações
+- Cadastrar alunos
+- Consultar alunos
+- Editar alunos
+- Excluir alunos
+- Fazer login
+- Sair da conta
 
-Após editar os arquivos, faça um commit no Git e envie com push ao GitHub. As alterações não são enviadas automaticamente.
+## Tecnologias utilizadas
 
-O repositório armazena o código. Os registros do PostgreSQL precisam de backup separado.
+- PHP
+- PostgreSQL
+- HTML
+- CSS
+- Git
+- GitHub
+
+## Estrutura do projeto
+
+```text
+mini_sistema/
+├── app/
+├── css/
+├── database/
+├── includes/
+├── login/
+├── index.php
+└── README.md
+```
+
+## Como executar
+
+1. Instale o PHP.
+2. Instale o PostgreSQL.
+3. Confira a conexão com o banco em database/connect_postgres.php.
+4. Abra o terminal na pasta que contém mini_sistema.
+5. Execute:
+    php -S localhost:8000
+
+## Banco de dados
+
+O projeto utiliza PostgreSQL.
+
+Os arquivos SQL ficam na pasta database.
+Exemplo:
+
+```text
+database/
+├── connect_postgres.php
+└── ajustar_senhas.sql
+```
+
+## Senhas
+
+As senhas são protegidas usando:
+password_hash()
+
+E são verificadas no login usando:
+password_verify()
+
+Assim, a senha não fica salva diretamente no banco.
+
+## GitHub
+
+Depois de alterar o projeto, use:
+
+git add .
+
+git commit -m "descricao da alteracao"
+
+git push
+
+## Autor
+
+### Matheus Gil
