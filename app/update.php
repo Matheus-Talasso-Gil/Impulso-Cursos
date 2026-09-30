@@ -16,36 +16,39 @@ require_once __DIR__ . '/../includes/functions.php';
 <main>
     <h1>Atualizar aluno</h1>
     <?php
-    $aluno = false;
+    $aluno = false; // indica que nenhum aluno foi carregado inicialmente
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['id'])) {
-        $id = $_POST['id'];
-        $sql = 'SELECT * FROM alunos WHERE id = :id';
+        $id = $_POST['id']; // recebe o ID enviado pelo formulário ou pelo relatório
+        $sql = 'SELECT * FROM alunos WHERE id = :id'; // busca o aluno correspondente ao ID
         $stmt = $conexao->prepare($sql);
-        $stmt->bindParam(':id', $id);
+        $stmt->bindParam(':id', $id); // associa o ID ao parâmetro da consulta
         $stmt->execute();
-        $aluno = $stmt->fetch(PDO::FETCH_ASSOC);
+        $aluno = $stmt->fetch(PDO::FETCH_ASSOC); // guarda os dados encontrados para preencher o formulário
         if ($aluno && isset($_POST['nome'])) {
+            // atualiza os dados quando o formulário de edição é enviado
             Atualizar($conexao, $id, $_POST['nome'], $_POST['turma'], $_POST['nasc'], $_POST['ativo'], $_POST['email']);
             $stmt->execute();
-            $aluno = $stmt->fetch(PDO::FETCH_ASSOC);
+            $aluno = $stmt->fetch(PDO::FETCH_ASSOC); // carrega novamente os dados atualizados
         }
         if (!$aluno) {
-            echo '<p>Aluno não encontrado.</p>';
+            echo '<p>Aluno não encontrado.</p>'; // informa quando o ID não corresponde a um aluno
         }
     } else {
         echo '<p>Digite o ID do aluno para carregar os dados ou escolha Editar no relatório.</p>';
     }
     ?>
-    <?php if (!$aluno): ?>
+    <?php if (!$aluno): ?> <!-- exibe o campo para buscar um aluno pelo ID -->
     <form action="" method="post">
         <label for="id">ID do aluno:</label>
         <input type="number" name="id" id="id" min="1" max="255" required>
         <input type="submit" value="Buscar aluno">
     </form>
     <?php endif; ?>
-    <?php if ($aluno): ?>
+    <?php if ($aluno): ?> <!-- exibe o formulário preenchido quando o aluno é encontrado -->
     <form action="" method="post">
+        <!-- htmlspecialchars impede que caracteres especiais dos dados sejam interpretados como código HTML -->
         <p>ID: <?= htmlspecialchars((string) $aluno['id'], ENT_QUOTES, 'UTF-8') ?></p>
+        <!-- mantém o ID associado ao aluno durante o envio da atualização -->
         <input type="hidden" name="id" value="<?= htmlspecialchars((string) $aluno['id'], ENT_QUOTES, 'UTF-8') ?>">
         <label for="nome">Nome:</label>
         <input type="text" name="nome" id="nome" value="<?= htmlspecialchars((string) $aluno['nome'], ENT_QUOTES, 'UTF-8') ?>" required>
