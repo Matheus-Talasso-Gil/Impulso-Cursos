@@ -1,5 +1,31 @@
-# Impulso Cursos — Diagramas do sistema
+﻿# Diagramas do sistema
 
-Visão dos fluxos implementados no projeto. Consulte a [documentação](documentacao.md) para as explicações e limitações.
+## Estrutura e ligação entre as pastas
 
-## Estrutura do sistema
+Os blocos mostram os arquivos e suas funções. As ligações representam o uso entre módulos, não relações entre tabelas do banco.
+
+- **App:** cadastro, consulta, edição e exclusão de alunos.
+- **Login:** acesso ao sistema e verificação de sessão.
+- **Includes:** arquivos compartilhados pelas páginas.
+- **Database:** conexão com o banco de dados.
+- **CSS:** aparência das páginas.
+
+```mermaid
+erDiagram
+    app {
+        php create "Cadastrar aluno"
+        php select "Listar alunos"
+        php select_w "Consultar ID 7"
+        php select_w_w "Consultar por ID"
+        php update "Editar aluno"
+        php delete "Excluir aluno"
+        sql TABEL_alunos "Criar tabela"
+        md tabela "Documentar tabela"
+    }
+
+    login {
+        php login "Entrar"
+        php cadastrar "Cadastrar usuário"
+        php verificar_user "Verificar sessão"
+        php logout "Sair"
+    }
