@@ -1,99 +1,53 @@
 ﻿# Diagramas do CRUD
 
-Cada diagrama mostra a tabela usada pelo arquivo de `app/`. Todos usam `alunos`: `id` é PK e não há FK definida.
+Os arquivos do CRUD utilizam a tabela `alunos`.
+
+O campo `id` é a chave primária e não há chave estrangeira definida.
+
+## Tabela alunos
+
+```mermaid
+erDiagram
+    alunos {
+        serial id PK
+        varchar(60) nome
+        date nasc
+        varchar(50) turma
+        boolean ativo
+        varchar(100) email
+    }
+```
 
 ## create.php
 
-- Cadastra o aluno. O banco gera o id automaticamente.
+Cadastra um novo aluno.
 
-```mermaid
-erDiagram
-    alunos {
-        serial id PK
-        varchar(60) nome
-        date nasc
-        varchar(50) turma
-        boolean ativo
-        varchar(100) email
-    }
-```
+O campo `id` é gerado automaticamente pelo banco de dados.
 
 ## select.php
 
-- Lista os alunos em ordem de id.
-
-```mermaid
-erDiagram
-    alunos {
-        serial id PK
-        varchar(60) nome
-        date nasc
-        varchar(50) turma
-        boolean ativo
-        varchar(100) email
-    }
-```
+Lista os alunos cadastrados em ordem do  menor pro maior com base no  `id`.
 
 ## select_w.php
 
-- Busca o aluno com id buscado e mostra os demais campos.
-
-```mermaid
-erDiagram
-    alunos {
-        serial id PK
-        varchar(60) nome
-        date nasc
-        varchar(50) turma
-        boolean ativo
-        varchar(100) email
-    }
-```
+Busca um aluno pelo `id` informado e mostra os seus dados.
 
 ## select_w_w.php
 
-- Busca e mostra o aluno pelo id informado.
-
-```mermaid
-erDiagram
-    alunos {
-        serial id PK
-        varchar(60) nome
-        date nasc
-        varchar(50) turma
-        boolean ativo
-        varchar(100) email
-    }
-```
+Busca e mostra um aluno específico pelo `id` informado.
 
 ## update.php
 
-- Busca pelo id e altera nome, nasc, turma, ativo e email.
+Busca um aluno pelo `id` e permite alterar:
 
-```mermaid
-erDiagram
-    alunos {
-        serial id PK
-        varchar(60) nome
-        date nasc
-        varchar(50) turma
-        boolean ativo
-        varchar(100) email
-    }
-```
+- nome
+- data de nascimento
+- turma
+- situação do aluno
+- e-mail
 
 ## delete.php
 
-- Busca pelo id, mostra nome e turma e exclui após confirmação.
+Busca um aluno pelo `id`.
 
-```mermaid
-erDiagram
-    alunos {
-        serial id PK
-        varchar(60) nome
-        date nasc
-        varchar(50) turma
-        boolean ativo
-        varchar(100) email
-    }
-```
+Antes da exclusão, mostra o nome e a turma do aluno e pede confirmação para excluir.
