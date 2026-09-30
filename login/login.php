@@ -3,14 +3,19 @@ require_once __DIR__ . '/../includes/session.php';
 require_once __DIR__ . '/../includes/functions.php';
 $erro = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $usuario = consultar_user($conexao, $_POST['email']);
-    if ($usuario && $usuario['email'] == $_POST['email'] && password_verify($_POST['senha'], $usuario['senha'])) { // confere a senha digitada com o hash salvo
-        session_regenerate_id(true);
-        $_SESSION['id'] = $usuario['id'];
-        header('Location: ../index.php');
-        exit();
+    try {
+        $usuario = consultar_user($conexao, $_POST['email'] ?? '');
+        if ($usuario && password_verify($_POST['senha'] ?? '', $usuario['senha'])) { // confere a senha digitada com o hash salvo
+            session_regenerate_id(true);
+            $_SESSION['id'] = $usuario['id'];
+            header('Location: ../index.php');
+            exit();
+        }
+        $erro = 'Usuário ou senha inválidos';
+    } catch (PDOException $e) {
+        error_log($e->getMessage());
+        $erro = 'Não foi possível consultar o cadastro. Tente novamente.';
     }
-    $erro = 'Usuário ou senha inválidos';
 }
 ?>
 <!DOCTYPE html>
@@ -26,6 +31,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <main>
     <h1>Área do funcionário</h1>
     <p>Faça login para gerenciar os alunos da Impulso Cursos.</p>
+    <?php if (($_GET['cadastro'] ?? '') === 'sucesso'): ?>
+        <p class="message-success" role="status">Cadastro realizado. Entre com seu e-mail e senha.</p>
+    <?php endif; ?>
     <?php if ($erro !== ''): ?>
         <p class="message-error" role="alert"><?= htmlspecialchars($erro, ENT_QUOTES, 'UTF-8') ?></p>
     <?php endif; ?>
