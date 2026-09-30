@@ -95,7 +95,7 @@ function read_w_w($conexao, $id)
             echo "Turma:" . $aluno['turma'] . '<br>';
             echo "Email:" . $aluno['email'] . '<br>';
             echo "Data de Nascimento:" . $aluno['nasc'] . '<br>';
-            echo "Ativo:" . $aluno['ativo'];
+            echo "Status: " . ($aluno['ativo'] ? "Ativo" : "Inativo");
         } else {
             echo "Nenhum registro encontrado.";
         }
