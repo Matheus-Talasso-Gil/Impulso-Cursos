@@ -106,30 +106,29 @@ function read_w_w($conexao, $id)
 }
 function cadastrar_user($conexao, $email, $senha)
 {
+    $email = trim($email);
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL) || $senha === '') {
+        throw new InvalidArgumentException('Informe um e-mail válido e uma senha.');
+    }
+    if (consultar_user($conexao, $email)) {
+        throw new InvalidArgumentException('Este e-mail já está cadastrado. Faça login com a senha do cadastro mais recente.');
+    }
     $senhaHash = password_hash($senha, PASSWORD_DEFAULT); // gera o hash para não salvar a senha original
     $sql = "INSERT INTO usuarios (email, senha)   VALUES (:email, :senha)";
-    try {
-        $stmt = $conexao->prepare($sql);
-        $stmt->bindParam(":email", $email);
-        $stmt->bindParam(":senha", $senhaHash);
+    $stmt = $conexao->prepare($sql);
+    $stmt->bindParam(":email", $email);
+    $stmt->bindParam(":senha", $senhaHash);
 
-        $stmt->execute();
-        echo "Usuário inserido com sucesso!";
-    } catch (PDOException $e) {
-        echo "Erro: " . $e->getMessage();
-    }
+    $stmt->execute();
 }
 function consultar_user($conexao, $email)
 {
-    $sql = "SELECT id, email, senha FROM usuarios WHERE email = :email";
-    try {
-        $stmt = $conexao->prepare($sql);
-        $stmt->bindParam(":email", $email);
-        $stmt->execute();
-        $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $usuario;
-    } catch (PDOException $e) {
-        echo "Erro: " . $e->getMessage();
-        return null;
-    }
+    $email = trim($email);
+    // Há cadastros antigos duplicados: usa a senha do cadastro mais recente.
+    $sql = "SELECT id, email, senha FROM usuarios WHERE email = :email ORDER BY id DESC LIMIT 1";
+    $stmt = $conexao->prepare($sql);
+    $stmt->bindParam(":email", $email);
+    $stmt->execute();
+    $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $usuario;
 }
