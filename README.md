@@ -28,17 +28,31 @@ Para abrir e visualizar os arquivos `.excalidraw` no VS Code, instale a extensã
 
 ### Telas
 
+#### Tela inicial
+
 ![Tela inicial](prototipos/imagens/tela_inicial.png)
+
+#### Tela de login
 
 ![Tela de login](prototipos/imagens/tela_login.png)
 
+#### Tela de cadastro
+
 ![Tela de cadastro](prototipos/imagens/tela_cadastrar.png)
+
+#### Tela de cadastro de aluno
 
 ![Tela de cadastro de aluno](prototipos/imagens/tela_cadastrar_aluno.png)
 
+#### Tela de exclusão
+
 ![Tela de exclusão](prototipos/imagens/tela_excluir.png)
 
+#### Tela de confirmação de exclusão
+
 ![Tela de confirmação de exclusão](prototipos/imagens/tela_confirmar_exclusao.png)
+
+#### Tela de resultado da consulta
 
 ![Tela de resultado da consulta](prototipos/imagens/tela_resultado_da_consulta.png)
 
