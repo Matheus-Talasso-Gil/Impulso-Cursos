@@ -58,3 +58,25 @@ erDiagram
     database ||--|| PostgreSQL : "conecta"
 ```
 
+## Tabelas do banco de dados
+
+- Sem chave estrangeira entre `alunos` e `usuarios`.
+- Tipos de `usuarios` ilustrativos: o script da tabela não está no projeto.
+
+```mermaid
+erDiagram
+    alunos {
+        serial id PK
+        varchar(60) nome
+        date nasc
+        varchar(50) turma
+        boolean ativo
+        varchar(100) email
+    }
+
+    usuarios {
+        int id PK
+        string email
+        string senha
+    }
+```
