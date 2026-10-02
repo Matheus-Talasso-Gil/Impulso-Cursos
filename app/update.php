@@ -22,13 +22,13 @@ require_once __DIR__ . '/../includes/functions.php';
         $sql = 'SELECT * FROM alunos WHERE id = :id'; // busca o aluno correspondente ao ID
         $stmt = $conexao->prepare($sql);
         $stmt->bindParam(':id', $id); // associa o ID ao parâmetro da consulta
-        $stmt->execute();
+        $stmt->execute(); // Executa a busca preparada do aluno pelo ID.
         $aluno = $stmt->fetch(PDO::FETCH_ASSOC); // guarda os dados encontrados para preencher o formulário
         if ($aluno && isset($_POST['nome'])) {
             // atualiza os dados quando o formulário de edição é enviado, incluindo o CPF
-            $cpf = preg_replace('/\D/', '', $_POST['cpf'] ?? '');
-            Atualizar($conexao, $id, $_POST['nome'], $_POST['turma'], $_POST['nasc'], $_POST['ativo'], $_POST['email'], $cpf);
-            $stmt->execute();
+            $cpf = preg_replace('/\D/', '', $_POST['cpf'] ?? ''); // Remove a máscara antes de atualizar o CPF.
+            Atualizar($conexao, $id, $_POST['nome'], $_POST['turma'], $_POST['nasc'], $_POST['ativo'], $_POST['email'], $cpf); // Salva os dados enviados pelo formulário.
+            $stmt->execute(); // Reexecuta a busca para recarregar os dados atualizados.
             $aluno = $stmt->fetch(PDO::FETCH_ASSOC); // carrega novamente os dados atualizados
         }
         if (!$aluno) {
@@ -53,26 +53,20 @@ require_once __DIR__ . '/../includes/functions.php';
         <input type="hidden" name="id" value="<?= htmlspecialchars((string) $aluno['id'], ENT_QUOTES, 'UTF-8') ?>">
         <label for="nome">Nome:</label>
         <input type="text" name="nome" id="nome" value="<?= htmlspecialchars((string) $aluno['nome'], ENT_QUOTES, 'UTF-8') ?>" required>
-        <br><br>
         <!-- campo de CPF para manter os dados do aluno consistentes com o cadastro -->
         <label for="cpf">CPF:</label>
         <input type="text" name="cpf" id="cpf" maxlength="14" value="<?= htmlspecialchars((string) ($aluno['cpf'] ?? ''), ENT_QUOTES, 'UTF-8') ?>" required>
-        <br><br>
         <label for="turma">Turma:</label>
         <input type="text" name="turma" id="turma" value="<?= htmlspecialchars((string) $aluno['turma'], ENT_QUOTES, 'UTF-8') ?>" required>
-        <br><br>
         <label for="email">E-mail:</label>
         <input type="email" name="email" id="email" value="<?= htmlspecialchars((string) ($aluno['email'] ?? ''), ENT_QUOTES, 'UTF-8') ?>" required>
-        <br><br>
         <label for="nasc">Nascimento:</label>
         <input type="date" name="nasc" id="nasc" value="<?= htmlspecialchars((string) $aluno['nasc'], ENT_QUOTES, 'UTF-8') ?>" required>
-        <br><br>
         <label>Ativo:</label>
         <input type="radio" name="ativo" id="ativo_sim" value="true" <?= $aluno['ativo'] ? 'checked' : '' ?> required>
         <label for="ativo_sim">SIM</label>
         <input type="radio" name="ativo" id="ativo_nao" value="false" <?= !$aluno['ativo'] ? 'checked' : '' ?>>
         <label for="ativo_nao">NÃO</label>
-        <br><br>
         <input type="submit" value="Atualizar">
         <input type="reset" value="Restaurar campos">
     </form>

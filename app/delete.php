@@ -19,20 +19,18 @@ require_once __DIR__ . '/../login/verificar_user.php';
  $aluno = false;
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['id'])) { // verifica se recebeu um id pelo formulario
     $id = $_POST['id'];
-    $sql = 'SELECT * FROM alunos WHERE id = :id';
+    $sql = 'SELECT * FROM alunos WHERE id = :id'; // Carrega o aluno antes de exibir a confirmação ou excluir.
     $stmt = $conexao->prepare($sql);
     $stmt->bindParam(':id', $id); // liga o id recebido ao parametro da consulta
-    $stmt->execute();
+    $stmt->execute(); // Executa a busca pelo ID recebido.
     $aluno = $stmt->fetch(PDO::FETCH_ASSOC); // pega os dados do aluno encontrado
     if (!$aluno) {
         echo '<p class="message-error" role="alert">Aluno não encontrado.</p>';
-    } else {
-        if (isset($_POST['confirmar'])) { // so exclui quando o usuario confirma
-            apagar($conexao);
-            $aluno = false;
-        }
-        }
+    } elseif (isset($_POST['confirmar'])) { // Exclui somente após a confirmação do usuário.
+        apagar($conexao); // Chama a função que remove o aluno pelo ID enviado.
+        $aluno = false; // Faz a página voltar ao formulário de busca após excluir.
     }
+}
     ?>
     <?php if (!$aluno): ?> <!-- se nao tiver aluno carregado mostra o formulario de id -->
     <form action="" method="post">
@@ -45,7 +43,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['id'])) { // verifica s
     <p>ID: <?= htmlspecialchars((string) $aluno['id'], ENT_QUOTES, 'UTF-8') ?></p> <!-- mostra o id do aluno -->
     <p>Nome: <?= htmlspecialchars((string) $aluno['nome'], ENT_QUOTES, 'UTF-8') ?></p> <!-- mostra o nome do aluno -->
     <p>Turma: <?= htmlspecialchars((string) $aluno['turma'], ENT_QUOTES, 'UTF-8') ?></p> <!-- mostra a turma do aluno -->
-
     <form action="" method="post" class="danger-confirmation"> <!-- inicia o formulario de confirmacao -->
         <input type="hidden" name="id" value="<?= htmlspecialchars((string) $aluno['id'], ENT_QUOTES, 'UTF-8') ?>"> <!-- guarda o id escondido para enviar novamente -->
         <input type="submit" name="confirmar" value="Confirmar exclusão"> <!-- envia a confirmacao para permitir a exclusao -->

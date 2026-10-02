@@ -31,7 +31,7 @@ $alunos = listarAlunos($conexao, $turma, $situacao); // busca os alunos conforme
                             <label for="filtro-turma">Turma</label>
                             <select name="turma" id="filtro-turma">
                                 <option value="" <?= $turma === '' ? 'selected' : '' ?>>Todas as turmas</option>
-                                <?php foreach ($turmas as $codigo => $nome): ?>
+                                <?php foreach ($turmas as $codigo => $nome): ?> <!-- Gera as opções de turma sem repetir a marcação. -->
                                 <option value="<?= htmlspecialchars($codigo, ENT_QUOTES, 'UTF-8') ?>" <?= $turma === $codigo ? 'selected' : '' ?>><?= htmlspecialchars($codigo . ' - ' . $nome, ENT_QUOTES, 'UTF-8') ?></option>
                                 <?php endforeach; ?>
                             </select>
@@ -71,7 +71,7 @@ $alunos = listarAlunos($conexao, $turma, $situacao); // busca os alunos conforme
                         <td><?= htmlspecialchars((string) $aluno['nasc'], ENT_QUOTES, 'UTF-8') ?></td>
                         <td><?= htmlspecialchars((string) $aluno['turma'], ENT_QUOTES, 'UTF-8') ?></td>
                         <td><?= htmlspecialchars((string) ($aluno['email'] ?? ''), ENT_QUOTES, 'UTF-8') ?></td>
-                        <td><span class="student-status <?= $aluno['ativo'] ? 'is-active' : 'is-inactive' ?>"><?= $aluno['ativo'] ? 'Ativo' : 'Inativo' ?></span></td>
+                        <td><span class="student-status <?= $aluno['ativo'] ? 'is-active' : 'is-inactive' ?>"><?= $aluno['ativo'] ? 'Ativo' : 'Inativo' ?></span></td> <!-- Exibe a situação do aluno como badge. -->
                         <td>
                             <form action="update.php" method="post" class="edit-action"> <!-- envia o ID do aluno escolhido para a tela de atualização -->
                                 <input type="hidden" name="id" value="<?= htmlspecialchars((string) $aluno['id'], ENT_QUOTES, 'UTF-8') ?>">

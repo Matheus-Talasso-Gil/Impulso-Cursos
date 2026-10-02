@@ -42,7 +42,7 @@ function buscarAlunoPorCpf($conexao, $cpf) {
                 } else echo '<p class="message-error" role="alert">Número inválido, tente novamente.</p>';
             } elseif (($_POST['tipo_consulta'] ?? '') === 'cpf' && !empty($_POST['cpf'])) { // Usa o CPF somente se esse método foi selecionado.
                 $cpf = preg_replace('/\D/', '', $_POST['cpf']); // Remove pontos e traços antes da busca.
-                $aluno = buscarAlunoPorCpf($conexao, $cpf);
+                $aluno = buscarAlunoPorCpf($conexao, $cpf); // Localiza o registro pelo CPF limpo.
                 if ($aluno !== false) {
                     echo '<section class="student-result" aria-label="Resultado da consulta">'; read_w_w($conexao, $aluno['id']); echo '</section>'; // Reutiliza a exibição do cadastro encontrado.
                 } else echo '<p class="lookup-empty" role="status">Nenhum aluno encontrado com esse CPF.</p>';
