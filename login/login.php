@@ -8,6 +8,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') { // só verifica as credenciais apó
         if ($usuario && password_verify($_POST['senha'] ?? '', $usuario['senha'])) { // compara a senha digitada com o hash salvo
             session_regenerate_id(true); // evita reutilizar o identificador antigo da sessão
             $_SESSION['id'] = $usuario['id']; // marca o funcionário como autenticado
+            $_SESSION['email'] = $usuario['email'];
+            $_SESSION['tipo'] = $usuario['tipo'] ?? 'usuario';
             header('Location: ../index.php'); exit(); // abre a página inicial após o login
         }
         $erro = 'Usuário ou senha inválidos';

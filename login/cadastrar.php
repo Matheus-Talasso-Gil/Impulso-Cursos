@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../includes/session.php';
 require_once __DIR__ . '/../includes/functions.php';
+if (isset($_SESSION['id'])) { header('Location: /mini_sistema/login/perfil.php'); exit(); }
 $erro = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') { // só processa a conta quando o formulário é enviado
     try {

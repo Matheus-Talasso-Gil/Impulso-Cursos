@@ -129,7 +129,7 @@ function cadastrar_user($conexao, $email, $senha)
         throw new InvalidArgumentException('Este e-mail já está cadastrado. Faça login com a senha do cadastro mais recente.');
     }
     $senhaHash = password_hash($senha, PASSWORD_DEFAULT); // gera um hash para não armazenar a senha original
-    $sql = "INSERT INTO usuarios (email, senha)   VALUES (:email, :senha)"; // cria o comando para inserir o usuário
+    $sql = "INSERT INTO usuarios (email, senha, tipo) VALUES (:email, :senha, 'usuario')"; // força o cadastro público a criar sempre uma conta comum
     $stmt = $conexao->prepare($sql);
     $stmt->bindParam(":email", $email); $stmt->bindParam(":senha", $senhaHash); // associa e-mail e senha criptografada
     $stmt->execute(); // salva o usuário no banco
@@ -137,7 +137,7 @@ function cadastrar_user($conexao, $email, $senha)
 function consultar_user($conexao, $email)
 {
     $email = trim($email); // remove espaços ao redor do e-mail informado
-    $sql = "SELECT id, email, senha FROM usuarios WHERE email = :email ORDER BY id DESC LIMIT 1"; // prefere o cadastro mais recente se houver duplicatas antigas
+    $sql = "SELECT id, email, senha, tipo FROM usuarios WHERE email = :email ORDER BY id DESC LIMIT 1"; // retorna o tipo da conta junto com os dados de login
     $stmt = $conexao->prepare($sql);
     $stmt->bindParam(":email", $email); $stmt->execute(); // consulta o usuário pelo e-mail
     return $stmt->fetch(PDO::FETCH_ASSOC); // retorna o usuário encontrado ou false

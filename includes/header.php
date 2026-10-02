@@ -1,18 +1,32 @@
+<?php require_once __DIR__ . '/session.php'; ?>
 <header>
     <nav>
-        <a class="brand" href="/mini_sistema/index.php">Impulso Cursos</a>
-        <div class="nav-links">
-            <a href="/mini_sistema/index.php">Início</a>
-            <a href="/mini_sistema/app/create.php">Cadastrar</a>
-            <a href="/mini_sistema/app/delete.php">Excluir</a>
-            <a href="/mini_sistema/app/select.php">Relatório</a>
-            <a href="/mini_sistema/app/select_w_w.php">Consultar</a>
-        </div>
-        <div class="nav-account">
-            <?php if (!isset($_SESSION['id'])): // mostra entrar somente quando o usuário não está logado ?>
-            <a href="/mini_sistema/login/login.php">Entrar</a>
-            <?php endif; // encerra a condição que controla a exibição do link entrar ?>
-            <a href="/mini_sistema/login/logout.php">Sair</a>
-        </div>
+        <?php if (!isset($_SESSION['id'])): ?>
+            <div class="nav-account">
+                <a href="/mini_sistema/login/login.php">Login</a>
+                <a href="/mini_sistema/login/cadastrar.php">Cadastre-se</a>
+            </div>
+        <?php else: ?>
+            <div class="nav-start">
+                <a href="/mini_sistema/index.php">Início</a>
+            </div>
+            <?php if (($_SESSION['tipo'] ?? 'usuario') === 'admin'): ?>
+                <div class="nav-links nav-links-admin">
+                    <a href="/mini_sistema/app/create.php">Cadastrar aluno</a>
+                    <a href="/mini_sistema/app/select_w_w.php">Consultar aluno</a>
+                    <a href="/mini_sistema/app/select.php">Relatório</a>
+                    <a href="/mini_sistema/app/delete.php">Excluir aluno</a>
+                    <a href="/mini_sistema/app/cursos.php">Cursos</a>
+                </div>
+            <?php else: ?>
+                <div class="nav-links">
+                    <a href="/mini_sistema/app/cursos.php">Meus cursos</a>
+                </div>
+            <?php endif; ?>
+            <div class="nav-account">
+                <a href="/mini_sistema/login/perfil.php">Meu perfil</a>
+                <a href="/mini_sistema/login/logout.php">Sair</a>
+            </div>
+        <?php endif; ?>
     </nav>
 </header>

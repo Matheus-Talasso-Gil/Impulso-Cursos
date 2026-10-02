@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../includes/session.php';
-require_once __DIR__ . '/../login/verificar_user.php';
+require_once __DIR__ . '/../login/verificar_admin.php';
 require_once __DIR__ . '/../includes/functions.php';
 $turmas = ['INF-01' => 'Informática Básica', 'ING-01' => 'Inglês', 'ADM-01' => 'Administração']; // lista as turmas que podem ser selecionadas no relatório
 $turma = is_string($_GET['turma'] ?? null) ? $_GET['turma'] : ''; // lê a turma enviada pelo formulário get
