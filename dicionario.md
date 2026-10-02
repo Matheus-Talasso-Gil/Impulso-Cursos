@@ -29,10 +29,15 @@ Guarda as contas usadas para entrar no sistema.
 | senha | VARCHAR(255) | Não definido | Não definido | Hash da senha, gerado com `password_hash()` e verificado com `password_verify()`. |
 
 - Os campos aparecem nas consultas de [functions.php](includes/functions.php).
-- O projeto ainda não possui o script de criação da tabela `usuarios`.
+- A tabela `usuarios` é criada pelo script [table.pgsql](database/table.pgsql).
 - Tipos, chaves e regras de nulidade devem ser confirmados no banco.
 - O arquivo [ajustar_senhas.sql](database/ajustar_senhas.sql) ajusta o campo de senha para aceitar os hashes.
 - Senhas antigas salvas como texto precisam ser convertidas ou redefinidas.
+
+## Scripts do banco
+
+- [table.pgsql](database/table.pgsql) cria as tabelas que ainda não existem e não apaga registros existentes. Ele também não altera a estrutura de tabelas já criadas.
+- [reset_database.pgsql](database/auto_destruicao/reset_database.pgsql) é destrutivo: ao executá-lo, reinicia os dados do banco de dados do zero, apagando e recriando vazias as tabelas `alunos` e `usuarios`. Não apaga o banco PostgreSQL inteiro, mas todos os registros dessas tabelas são perdidos. Use somente em desenvolvimento, após confirmar o banco e fazer backup.
 
 ## Legenda
 
