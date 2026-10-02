@@ -2,18 +2,18 @@
 require_once __DIR__ . '/../database/connect_postgres.php';
 function validar_cpf($cpf)
 {
-    $cpf = preg_replace('/\D/', '', (string) $cpf);
-    if (strlen($cpf) !== 11 || preg_match('/^(\d)\1{10}$/', $cpf)) return false;
+    $cpf = preg_replace('/\D/', '', (string) $cpf); // Remove a pontuação para validar somente os dígitos.
+    if (strlen($cpf) !== 11 || preg_match('/^(\d)\1{10}$/', $cpf)) return false; // Exige 11 dígitos e rejeita números repetidos.
     $soma = 0;
-    for ($i = 0; $i < 9; $i++) $soma += (int) $cpf[$i] * (10 - $i);
+    for ($i = 0; $i < 9; $i++) $soma += (int) $cpf[$i] * (10 - $i); // Calcula a soma usada no primeiro dígito verificador.
     $resto = $soma % 11;
     $primeiro = $resto < 2 ? 0 : 11 - $resto;
-    if ((int) $cpf[9] !== $primeiro) return false;
+    if ((int) $cpf[9] !== $primeiro) return false; // Confere o primeiro dígito verificador.
     $soma = 0;
-    for ($i = 0; $i < 10; $i++) $soma += (int) $cpf[$i] * (11 - $i);
+    for ($i = 0; $i < 10; $i++) $soma += (int) $cpf[$i] * (11 - $i); // Calcula a soma usada no segundo dígito.
     $resto = $soma % 11;
     $segundo = $resto < 2 ? 0 : 11 - $resto;
-    return (int) $cpf[10] === $segundo;
+    return (int) $cpf[10] === $segundo; // Retorna true somente se o segundo dígito também conferir.
 }
 function cadastrar($conexao, $nome, $turma, $nasc, $ativo, $email, $cpf)
 {
