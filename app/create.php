@@ -16,6 +16,27 @@ require_once __DIR__ . '/../login/verificar_cpf.php';
     <?php include __DIR__ . '/../includes/header.php'; ?>
     <main>
         <h1>Matricular aluno</h1>
+        <?php
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') { // so executa o cadastro quando o formulario for enviado
+            $cpf = verificar_cpf($_POST['cpf'] ?? '');
+            if ($cpf === false) {
+                echo '<p class="message-error" role="alert">Informe um CPF válido.</p>';
+            } else {
+                // inclui o CPF no insert para manter o cadastro completo do aluno
+                $sql = "INSERT INTO alunos  (nome, cpf, nasc, turma, ativo, email) 
+                        VALUES   (:nome, :cpf, :nasc, :turma, :ativo, :email)"; // cria o comando para inserir um novo aluno
+                $stmt = $conexao->prepare($sql); // prepara o comando antes de enviar para o banco
+                $stmt->bindParam(":nome", $_POST['nome']); // liga os dados do formulario aos parametros do sql
+                $stmt->bindParam(":cpf", $cpf); // guarda o CPF limpo no banco
+                $stmt->bindParam(":nasc", $_POST['nasc']); // Associa a data de nascimento ao parâmetro SQL.
+                $stmt->bindParam(":turma", $_POST['turma']); // Associa a turma selecionada ao parâmetro SQL.
+                $stmt->bindParam(":ativo", $_POST['ativo']); // Associa a situação escolhida ao parâmetro SQL.
+                $stmt->bindParam(":email", $_POST['email']); // Associa o e-mail informado ao parâmetro SQL.
+                $stmt->execute(); // executa o cadastro no banco
+                echo '<p class="message-success" role="status">Aluno cadastrado com sucesso!</p>';
+            }
+        }
+        ?>
         <form action="" method="post"> <!-- envia os dados do formulario para a mesma pagina -->
             <label for="nome">Nome: </label>
             <input type="text" name="nome" id="nome" required>
@@ -41,27 +62,6 @@ require_once __DIR__ . '/../login/verificar_cpf.php';
             <input type="submit" value="Cadastrar">
             <input type="reset" value="Limpar">
         </form>
-        <?php
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') { // so executa o cadastro quando o formulario for enviado
-            $cpf = verificar_cpf($_POST['cpf'] ?? '');
-            if ($cpf === false) {
-                echo '<p class="message-error" role="alert">Informe um CPF válido.</p>';
-            } else {
-                // inclui o CPF no insert para manter o cadastro completo do aluno
-                $sql = "INSERT INTO alunos  (nome, cpf, nasc, turma, ativo, email) 
-                        VALUES   (:nome, :cpf, :nasc, :turma, :ativo, :email)"; // cria o comando para inserir um novo aluno
-                $stmt = $conexao->prepare($sql); // prepara o comando antes de enviar para o banco
-                $stmt->bindParam(":nome", $_POST['nome']); // liga os dados do formulario aos parametros do sql
-                $stmt->bindParam(":cpf", $cpf); // guarda o CPF limpo no banco
-                $stmt->bindParam(":nasc", $_POST['nasc']); // Associa a data de nascimento ao parâmetro SQL.
-                $stmt->bindParam(":turma", $_POST['turma']); // Associa a turma selecionada ao parâmetro SQL.
-                $stmt->bindParam(":ativo", $_POST['ativo']); // Associa a situação escolhida ao parâmetro SQL.
-                $stmt->bindParam(":email", $_POST['email']); // Associa o e-mail informado ao parâmetro SQL.
-                $stmt->execute(); // executa o cadastro no banco
-                echo '<p class="message-success" role="status">Aluno cadastrado com sucesso!</p>';
-            }
-        }
-        ?>
     </main>
     <?php include __DIR__ . '/../includes/footer.php'; ?>
 </body>
