@@ -46,13 +46,14 @@ function listarAlunos($conexao, $turma = '', $situacao = 'todas') // aceita filt
     $stmt->execute($parametros); // executa usando os valores associados aos parâmetros
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
-function apagar($conexao)
+function apagar($conexao, $id)
 {
-    if (isset($_POST['id']) && $_POST['id'] != "") { // só exclui quando o formulário envia um id
-        $sql = "DELETE FROM alunos WHERE id = :id"; // prepara a exclusão do aluno selecionado
+    if ($id > 0) {
+        $sql = "DELETE FROM alunos WHERE id = :id"; // exclui somente o cadastro do aluno confirmado
         $stmt = $conexao->prepare($sql);
-        $stmt->bindParam(":id", $_POST['id']); $stmt->execute(); // executa a exclusão usando o id recebido
-        echo '<p class="message-success" role="status">Registro deletado.</p>';
+        $stmt->execute([':id' => $id]);
+        if ($stmt->rowCount()) echo '<p class="message-success" role="status">Registro deletado.</p>';
+        else echo '<p class="message-error" role="alert">Aluno não encontrado.</p>';
     } else {
         echo '<p class="message-error" role="alert">Insira um ID para apagar.</p>';
     }
@@ -79,14 +80,13 @@ function Consultar($conexao, $id)
 }
 function Atualizar($conexao, $id, $nome, $turma, $nasc, $ativo, $email, $cpf)
 {
-    $sql = "UPDATE alunos SET nome = :nome, turma = :turma, nasc = :nasc,
-            ativo = :ativo, email = :email, cpf = :cpf WHERE id = :id"; // atualiza todos os campos do aluno identificado
+    $sql = "UPDATE alunos SET nome = :nome, turma = :turma,
+            ativo = :ativo, email = :email WHERE id = :id"; // atualiza somente os campos permitidos
     try {
         $stmt = $conexao->prepare($sql);
         $stmt->bindParam(":id", $id); $stmt->bindParam(":nome", $nome); // associa id e nome
-        $stmt->bindParam(":turma", $turma); $stmt->bindParam(":nasc", $nasc); // associa turma e nascimento
+        $stmt->bindParam(":turma", $turma); // associa a turma
         $stmt->bindParam(":ativo", $ativo); $stmt->bindParam(":email", $email); // associa situação e e-mail
-        $stmt->bindParam(":cpf", $cpf); // associa o cpf
         $stmt->execute();
         echo '<p class="message-success" role="status">ALUNO ATUALIZADO COM SUCESSO! VOLTE AO RELATÓRIO PARA CONFERIR.</p>';
     } catch (PDOException $e) {

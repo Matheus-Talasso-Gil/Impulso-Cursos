@@ -57,7 +57,7 @@ $alunos = listarAlunos($conexao, $turma, $situacao); // busca os alunos conforme
                         <th scope="col">ID</th><th scope="col">Nome</th>
                         <!-- coluna cpf adicionada para mostrar o documento do aluno com máscara -->
                         <th scope="col">CPF</th><th scope="col">Nascimento</th><th scope="col">Turma</th>
-                        <th scope="col">E-mail</th><th scope="col">Situação</th><th scope="col">Ações</th>
+                        <th scope="col">E-mail</th><th scope="col">Situação</th><th scope="col">Conta</th><th scope="col">Ações</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -72,6 +72,7 @@ $alunos = listarAlunos($conexao, $turma, $situacao); // busca os alunos conforme
                         <td><?= htmlspecialchars((string) $aluno['turma'], ENT_QUOTES, 'UTF-8') ?></td>
                         <td><?= htmlspecialchars((string) ($aluno['email'] ?? ''), ENT_QUOTES, 'UTF-8') ?></td>
                         <td><span class="student-status <?= $aluno['ativo'] ? 'is-active' : 'is-inactive' ?>"><?= $aluno['ativo'] ? 'Ativo' : 'Inativo' ?></span></td> <!-- exibe a situação do aluno como badge -->
+                        <td><?= $aluno['usuario_id'] !== null ? 'Conta vinculada' : 'Sem conta' ?></td>
                         <td>
                             <form action="update.php" method="post" class="edit-action"> <!-- envia o id do aluno escolhido para a tela de atualização -->
                                 <input type="hidden" name="id" value="<?= htmlspecialchars((string) $aluno['id'], ENT_QUOTES, 'UTF-8') ?>">
@@ -81,11 +82,12 @@ $alunos = listarAlunos($conexao, $turma, $situacao); // busca os alunos conforme
                     </tr>
                     <?php endforeach; ?>
                     <?php if (!$alunos): ?> <!-- informa quando não há resultados para a consulta atual -->
-                    <tr><td colspan="8"><?= $filtrosAtivos ? 'Nenhum aluno corresponde aos filtros.' : 'Nenhum aluno cadastrado.' ?></td></tr>
+                    <tr><td colspan="9"><?= $filtrosAtivos ? 'Nenhum aluno corresponde aos filtros.' : 'Nenhum aluno cadastrado.' ?></td></tr>
                     <?php endif; ?>
                 </tbody>
             </table>
         </div>
+        <p><a class="report-link" href="admin.php">Vincular conta a aluno</a></p>
     </main>
     <?php include __DIR__ . '/../includes/footer.php'; ?>
 </body>
