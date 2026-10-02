@@ -1,5 +1,9 @@
--- Cria as tabelas somente quando ainda nao existem; nao apaga dados existentes.
-CREATE TABLE IF NOT EXISTS alunos (
+-- ATENCAO: DESTRUTIVO. Apaga todos os alunos e usuarios antes de recriar as tabelas.
+-- Use somente para reiniciar um banco de desenvolvimento, apos confirmar o banco e fazer backup.
+BEGIN;
+DROP TABLE IF EXISTS alunos;
+DROP TABLE IF EXISTS usuarios;
+CREATE TABLE alunos (
     id SERIAL PRIMARY KEY,
     nome VARCHAR(255) NOT NULL,
     cpf VARCHAR(14) NOT NULL UNIQUE,
@@ -8,9 +12,9 @@ CREATE TABLE IF NOT EXISTS alunos (
     ativo BOOLEAN NOT NULL DEFAULT TRUE,
     email VARCHAR(255) NOT NULL
 );
-
-CREATE TABLE IF NOT EXISTS usuarios (
+CREATE TABLE usuarios (
     id SERIAL PRIMARY KEY,
     email VARCHAR(255) NOT NULL UNIQUE,
     senha VARCHAR(255) NOT NULL
 );
+COMMIT;
