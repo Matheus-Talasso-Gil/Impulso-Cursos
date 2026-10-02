@@ -17,11 +17,21 @@ function cadastrar($conexao, $nome, $turma, $nasc, $ativo, $email, $cpf)
         echo "Erro: " . $e->getMessage();
     }
 }
-function listarAlunos($conexao)
+function listarAlunos($conexao, $turma = '', $situacao = 'todas') // Aceita filtros opcionais para a listagem do relatório.
 {
-    $sql = "SELECT * FROM alunos ORDER BY id ASC";
-    $stmt = $conexao->prepare($sql);
-    $stmt->execute();
+    $sql = "SELECT * FROM alunos"; // Começa buscando os registros da tabela de alunos.
+    $filtros = []; // Guarda somente as condições solicitadas.
+    $parametros = []; // Separa os valores da consulta para usá-los com segurança.
+    if ($turma !== '') {
+        $filtros[] = 'turma = :turma'; // Adiciona a condição de turma quando foi selecionada.
+        $parametros[':turma'] = $turma; // Associa o código ao parâmetro preparado.
+    }
+    if ($situacao === 'ativo') $filtros[] = 'ativo = TRUE'; // Restringe a lista aos alunos ativos.
+    elseif ($situacao === 'inativo') $filtros[] = 'ativo = FALSE'; // Restringe a lista aos alunos inativos.
+    if ($filtros) $sql .= ' WHERE ' . implode(' AND ', $filtros); // Combina os filtros escolhidos.
+    $sql .= ' ORDER BY id ASC'; // Mantém os resultados em ordem de cadastro.
+    $stmt = $conexao->prepare($sql); // Prepara a consulta antes de enviá-la ao banco.
+    $stmt->execute($parametros); // Executa usando os valores associados aos parâmetros.
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 function apagar($conexao)

@@ -2,7 +2,13 @@
 require_once __DIR__ . '/../includes/session.php';
 require_once __DIR__ . '/../login/verificar_user.php';
 require_once __DIR__ . '/../includes/functions.php';
-$alunos = listarAlunos($conexao); // busca todos os alunos para exibir no relatório
+$turmas = ['INF-01' => 'Informática Básica', 'ING-01' => 'Inglês', 'ADM-01' => 'Administração']; // Lista as turmas que podem ser selecionadas no relatório.
+$turma = is_string($_GET['turma'] ?? null) ? $_GET['turma'] : ''; // Lê a turma enviada pelo formulário GET.
+if ($turma !== '' && !isset($turmas[$turma])) $turma = ''; // Ignora códigos de turma que não existem na lista.
+$situacao = $_GET['situacao'] ?? 'todas'; // Usa "todas" quando nenhuma situação foi escolhida.
+if (!is_string($situacao) || !in_array($situacao, ['todas', 'ativo', 'inativo'], true)) $situacao = 'todas'; // Aceita somente as opções previstas.
+$filtrosAtivos = $turma !== '' || $situacao !== 'todas'; // Indica se existe algum filtro além dos valores padrão.
+$alunos = listarAlunos($conexao, $turma, $situacao); // busca os alunos conforme os filtros selecionados
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -16,9 +22,36 @@ $alunos = listarAlunos($conexao); // busca todos os alunos para exibir no relat�
     <?php include __DIR__ . '/../includes/header.php'; ?>
     <main>
         <h1>Alunos matriculados</h1>
+        <div class="report-toolbar">
+            <details class="filter-panel" <?= $filtrosAtivos ? 'open' : '' ?>><!-- Abre o painel nativamente e mantém aberto após aplicar filtros. -->
+                <summary class="filters-button">Filtros</summary>
+                <form action="" method="get" class="filter-form"><!-- Envia os critérios pela URL sem usar JavaScript. -->
+                    <div class="filter-fields">
+                        <div class="filter-field">
+                            <label for="filtro-turma">Turma</label>
+                            <select name="turma" id="filtro-turma">
+                                <option value="" <?= $turma === '' ? 'selected' : '' ?>>Todas as turmas</option>
+                                <?php foreach ($turmas as $codigo => $nome): ?>
+                                <option value="<?= htmlspecialchars($codigo, ENT_QUOTES, 'UTF-8') ?>" <?= $turma === $codigo ? 'selected' : '' ?>><?= htmlspecialchars($codigo . ' - ' . $nome, ENT_QUOTES, 'UTF-8') ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="filter-field">
+                            <label for="filtro-situacao">Situação</label>
+                            <select name="situacao" id="filtro-situacao">
+                                <option value="todas" <?= $situacao === 'todas' ? 'selected' : '' ?>>Todas</option>
+                                <option value="ativo" <?= $situacao === 'ativo' ? 'selected' : '' ?>>Ativos</option>
+                                <option value="inativo" <?= $situacao === 'inativo' ? 'selected' : '' ?>>Inativos</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="filter-actions"><input type="submit" value="Aplicar filtros"><a class="filter-reset" href="select.php">Limpar</a></div>
+                </form>
+            </details>
+        </div>
         <div class="table-wrapper" tabindex="0" role="region" aria-label="Relatório de alunos">
             <table>
-                <caption><div class="report-caption"><span>Relatório de alunos da Impulso Cursos</span><button type="button" class="filters-button">Filtros</button></div></caption>
+                <caption>Relatório de alunos da Impulso Cursos</caption>
                 <thead>
                     <tr>
                         <th scope="col">ID</th><th scope="col">Nome</th>
@@ -47,8 +80,8 @@ $alunos = listarAlunos($conexao); // busca todos os alunos para exibir no relat�
                         </td>
                     </tr>
                     <?php endforeach; ?>
-                    <?php if (!$alunos): ?> <!-- mostra uma mensagem quando ainda não há alunos cadastrados -->
-                    <tr><td colspan="8">Nenhum aluno cadastrado.</td></tr>
+                    <?php if (!$alunos): ?> <!-- informa quando não há resultados para a consulta atual -->
+                    <tr><td colspan="8"><?= $filtrosAtivos ? 'Nenhum aluno corresponde aos filtros.' : 'Nenhum aluno cadastrado.' ?></td></tr>
                     <?php endif; ?>
                 </tbody>
             </table>
