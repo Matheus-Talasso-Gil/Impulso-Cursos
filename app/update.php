@@ -2,7 +2,6 @@
 require_once __DIR__ . '/../includes/session.php';
 require_once __DIR__ . '/../login/verificar_admin.php';
 require_once __DIR__ . '/../includes/functions.php';
-require_once __DIR__ . '/../login/verificar_cpf.php';
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -15,67 +14,73 @@ require_once __DIR__ . '/../login/verificar_cpf.php';
 <body>
 <?php include __DIR__ . '/../includes/header.php'; ?>
 <main>
-    <h1>Atualizar aluno</h1>
-    <?php
-    $aluno = false; // indica que nenhum aluno foi carregado inicialmente
-    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['id'])) {
-        $id = $_POST['id']; // recebe o id enviado pelo formulário ou pelo relatório
-        $sql = 'SELECT * FROM alunos WHERE id = :id'; // busca o aluno correspondente ao id
-        $stmt = $conexao->prepare($sql);
-        $stmt->bindParam(':id', $id); // associa o id ao parâmetro da consulta
-        $stmt->execute(); // executa a busca preparada do aluno pelo id
-        $aluno = $stmt->fetch(PDO::FETCH_ASSOC); // guarda os dados encontrados para preencher o formulário
-        if ($aluno && isset($_POST['nome'])) {
-            $cpf = verificar_cpf($_POST['cpf'] ?? '');
-            if ($cpf === false) {
-                echo '<p class="message-error" role="alert">Informe um CPF válido.</p>';
-            } else {
-                Atualizar($conexao, $id, $_POST['nome'], $_POST['turma'], $_POST['nasc'], $_POST['ativo'], $_POST['email'], $cpf); // salva os dados somente após validar o cpf
-                $stmt->execute(); // reexecuta a busca para recarregar os dados atualizados
-                $aluno = $stmt->fetch(PDO::FETCH_ASSOC); // carrega novamente os dados atualizados
-            }
-        }
-        if (!$aluno) {
-            echo '<p class="message-error" role="alert">Aluno não encontrado.</p>'; // informa quando o id não corresponde a um aluno
-        }
-    } else {
-        echo '<p class="message-warning" role="status">Digite o ID do aluno para carregar os dados ou escolha Editar no relatório.</p>';
+<h1>Atualizar aluno</h1>
+<?php
+$aluno = false; // comeca sem aluno carregado
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['id']) || isset($_POST['nome']))) {
+    $id = isset($_POST['nome']) ? (int) ($_SESSION['aluno_edicao_id'] ?? 0) : (int) ($_POST['id'] ?? 0); // usa o id original
+    $stmt = $conexao->prepare('SELECT * FROM alunos WHERE id = :id'); // prepara a busca
+    $stmt->execute([':id' => $id]); // executa a busca
+    $aluno = $stmt->fetch(PDO::FETCH_ASSOC); // guarda o aluno
+    if ($aluno && !isset($_POST['nome'])) {
+        $_SESSION['aluno_edicao_id'] = $aluno['id']; // guarda o id original
+        $_SESSION['aluno_edicao_cpf'] = $aluno['cpf']; // guarda o cpf original
+        $_SESSION['aluno_edicao_nasc'] = $aluno['nasc']; // guarda o nascimento original
     }
-    ?>
-    <?php if (!$aluno): ?> <!-- exibe o campo para buscar um aluno pelo id -->
-    <form action="" method="post">
-        <label for="id">ID do aluno:</label>
-        <input type="number" name="id" id="id" min="1" max="255" required>
-        <input type="submit" value="Buscar aluno">
-    </form>
-    <?php endif; ?>
-    <?php if ($aluno): ?> <!-- exibe o formulário preenchido quando o aluno é encontrado -->
-    <form action="" method="post">
-        <!-- htmlspecialchars impede que caracteres especiais dos dados sejam interpretados como código html -->
-        <p>ID: <?= htmlspecialchars((string) $aluno['id'], ENT_QUOTES, 'UTF-8') ?></p>
-        <!-- mantém o id associado ao aluno durante o envio da atualização -->
-        <input type="hidden" name="id" value="<?= htmlspecialchars((string) $aluno['id'], ENT_QUOTES, 'UTF-8') ?>">
-        <label for="nome">Nome:</label>
-        <input type="text" name="nome" id="nome" value="<?= htmlspecialchars((string) $aluno['nome'], ENT_QUOTES, 'UTF-8') ?>" required>
-        <!-- campo de cpf para manter os dados do aluno consistentes com o cadastro -->
-        <label for="cpf">CPF:</label>
-        <input type="text" name="cpf" id="cpf" maxlength="14" value="<?= htmlspecialchars((string) ($aluno['cpf'] ?? ''), ENT_QUOTES, 'UTF-8') ?>" required>
-        <label for="turma">Turma:</label>
-        <input type="text" name="turma" id="turma" value="<?= htmlspecialchars((string) $aluno['turma'], ENT_QUOTES, 'UTF-8') ?>" required>
-        <label for="email">E-mail:</label>
-        <input type="email" name="email" id="email" value="<?= htmlspecialchars((string) ($aluno['email'] ?? ''), ENT_QUOTES, 'UTF-8') ?>" required>
-        <label for="nasc">Nascimento:</label>
-        <input type="date" name="nasc" id="nasc" value="<?= htmlspecialchars((string) $aluno['nasc'], ENT_QUOTES, 'UTF-8') ?>" required>
-        <label>Ativo:</label>
-        <input type="radio" name="ativo" id="ativo_sim" value="true" <?= $aluno['ativo'] ? 'checked' : '' ?> required>
-        <label for="ativo_sim">SIM</label>
-        <input type="radio" name="ativo" id="ativo_nao" value="false" <?= !$aluno['ativo'] ? 'checked' : '' ?>>
-        <label for="ativo_nao">NÃO</label>
-        <input type="submit" value="Atualizar">
-        <input type="reset" value="Restaurar campos">
-    </form>
-    <?php endif; ?>
-    <p><a class="report-link" href="select.php">Consultar RL</a></p>
+    if ($aluno && isset($_POST['nome'])) {
+        $cpf = $_SESSION['aluno_edicao_cpf'] ?? ''; // recupera o cpf original
+        $nasc = $_SESSION['aluno_edicao_nasc'] ?? ''; // recupera o nascimento original
+
+        if ($cpf === '' || $nasc === '') {
+            echo '<p class="message-error">Não foi possível recuperar os dados originais do aluno.</p>';
+        } else {
+            Atualizar($conexao, $id, $_POST['nome'], $_POST['turma'], $nasc, $_POST['ativo'], $_POST['email'], $cpf); // atualiza os campos permitidos
+            $stmt->execute([':id' => $id]); // busca novamente o aluno
+            $aluno = $stmt->fetch(PDO::FETCH_ASSOC); // carrega os dados atualizados
+        }
+    }
+    if (!$aluno) echo '<p class="message-error">Aluno não encontrado.</p>'; // informa quando nao encontra aluno
+} else {
+    echo '<p class="message-warning">Digite o ID do aluno para carregar os dados ou escolha Editar no relatório.</p>'; // orienta antes da busca
+}
+?>
+<?php if (!$aluno): ?>
+<form method="post">
+    <label for="id">ID do aluno:</label>
+    <input type="number" name="id" id="id" min="1" max="255" required>
+    <input type="submit" value="Buscar aluno">
+</form>
+<?php endif; ?>
+<?php if ($aluno): ?>
+<form method="post">
+    <!-- exibe o id sem permitir alteracao -->
+    <p>ID: <?= htmlspecialchars((string) $aluno['id'], ENT_QUOTES, 'UTF-8') ?></p>
+    <!-- permite alterar o nome -->
+    <label for="nome">Nome:</label>
+    <input type="text" name="nome" id="nome" value="<?= htmlspecialchars((string) $aluno['nome'], ENT_QUOTES, 'UTF-8') ?>" required>
+    <!-- exibe o cpf sem permitir alteracao -->
+    <label>CPF:</label>
+    <p><?= htmlspecialchars((string) $aluno['cpf'], ENT_QUOTES, 'UTF-8') ?></p>
+    <!-- permite alterar a turma -->
+    <label for="turma">Turma:</label>
+    <input type="text" name="turma" id="turma" value="<?= htmlspecialchars((string) $aluno['turma'], ENT_QUOTES, 'UTF-8') ?>" required>
+    <!-- permite alterar o email -->
+    <label for="email">E-mail:</label>
+    <input type="email" name="email" id="email" value="<?= htmlspecialchars((string) $aluno['email'], ENT_QUOTES, 'UTF-8') ?>" required>
+    <!-- exibe o nascimento sem permitir alteracao -->
+    <label>Data de nascimento:</label>
+    <p><?= htmlspecialchars((string) $aluno['nasc'], ENT_QUOTES, 'UTF-8') ?></p>
+    <!-- permite alterar a situacao -->
+    <label>Ativo:</label>
+    <input type="radio" name="ativo" id="ativo_sim" value="true" <?= $aluno['ativo'] ? 'checked' : '' ?> required>
+    <label for="ativo_sim">SIM</label>
+    <input type="radio" name="ativo" id="ativo_nao" value="false" <?= !$aluno['ativo'] ? 'checked' : '' ?>>
+    <label for="ativo_nao">NÃO</label>
+    <input type="submit" value="Atualizar">
+    <input type="reset" value="Restaurar campos">
+</form>
+<?php endif; ?>
+<p><a class="report-link" href="select.php">Consultar RL</a></p>
 </main>
 <?php include __DIR__ . '/../includes/footer.php'; ?>
 </body>
