@@ -25,8 +25,9 @@ require_once __DIR__ . '/../includes/functions.php';
         $stmt->execute();
         $aluno = $stmt->fetch(PDO::FETCH_ASSOC); // guarda os dados encontrados para preencher o formulário
         if ($aluno && isset($_POST['nome'])) {
-            // atualiza os dados quando o formulário de edição é enviado
-            Atualizar($conexao, $id, $_POST['nome'], $_POST['turma'], $_POST['nasc'], $_POST['ativo'], $_POST['email']);
+            // atualiza os dados quando o formulário de edição é enviado, incluindo o CPF
+            $cpf = preg_replace('/\D/', '', $_POST['cpf'] ?? '');
+            Atualizar($conexao, $id, $_POST['nome'], $_POST['turma'], $_POST['nasc'], $_POST['ativo'], $_POST['email'], $cpf);
             $stmt->execute();
             $aluno = $stmt->fetch(PDO::FETCH_ASSOC); // carrega novamente os dados atualizados
         }
@@ -52,6 +53,10 @@ require_once __DIR__ . '/../includes/functions.php';
         <input type="hidden" name="id" value="<?= htmlspecialchars((string) $aluno['id'], ENT_QUOTES, 'UTF-8') ?>">
         <label for="nome">Nome:</label>
         <input type="text" name="nome" id="nome" value="<?= htmlspecialchars((string) $aluno['nome'], ENT_QUOTES, 'UTF-8') ?>" required>
+        <br><br>
+        <!-- campo de CPF para manter os dados do aluno consistentes com o cadastro -->
+        <label for="cpf">CPF:</label>
+        <input type="text" name="cpf" id="cpf" maxlength="14" value="<?= htmlspecialchars((string) ($aluno['cpf'] ?? ''), ENT_QUOTES, 'UTF-8') ?>" required>
         <br><br>
         <label for="turma">Turma:</label>
         <input type="text" name="turma" id="turma" value="<?= htmlspecialchars((string) $aluno['turma'], ENT_QUOTES, 'UTF-8') ?>" required>

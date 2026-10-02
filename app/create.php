@@ -18,6 +18,9 @@ require_once __DIR__ . '/../login/verificar_user.php';
         <form action="" method="post"> <!-- envia os dados do formulario para a mesma pagina -->
             <label for="nome">Nome: </label>
             <input type="text" name="nome" id="nome" required><br><br>
+            <!-- campo obrigatório para identificar o aluno sem ambiguidade -->
+            <label for="cpf">CPF: </label>
+            <input type="text" name="cpf" id="cpf" maxlength="14" placeholder="000.000.000-00" inputmode="numeric" required><br><br>
             <label for="turma">Turma: </label>
             <select name="turma" id="turma" required> <!-- cria uma lista de turmas para o usuario escolher -->
                 <option value="" selected disabled>Selecione a turma</option>
@@ -40,16 +43,24 @@ require_once __DIR__ . '/../login/verificar_user.php';
         <?php
         if ($_SERVER['REQUEST_METHOD'] == 'POST') { // so executa o cadastro quando o formulario for enviado
             require_once __DIR__ . '/../database/connect_postgres.php'; // conecta com o banco de dados
-            $sql = "INSERT INTO alunos  (nome, nasc, turma, ativo, email) 
-                    VALUES   (:nome, :nasc, :turma, :ativo, :email)"; // cria o comando para inserir um novo aluno
-            $stmt = $conexao->prepare($sql); // prepara o comando antes de enviar para o banco
-            $stmt->bindParam(":nome", $_POST['nome']); // liga os dados do formulario aos parametros do sql
-            $stmt->bindParam(":nasc", $_POST['nasc']);
-            $stmt->bindParam(":turma", $_POST['turma']);
-            $stmt->bindParam(":ativo", $_POST['ativo']);
-            $stmt->bindParam(":email", $_POST['email']);
-            $stmt->execute(); // executa o cadastro no banco
-            echo "Aluno cadastrado com sucesso!";
+            // remove pontos, traços e espaços para salvar o CPF no formato numérico no banco
+            $cpf = preg_replace('/\D/', '', $_POST['cpf'] ?? '');
+            if ($cpf === '') {
+                echo "CPF obrigatório.";
+            } else {
+                // inclui o CPF no insert para manter o cadastro completo do aluno
+                $sql = "INSERT INTO alunos  (nome, cpf, nasc, turma, ativo, email) 
+                        VALUES   (:nome, :cpf, :nasc, :turma, :ativo, :email)"; // cria o comando para inserir um novo aluno
+                $stmt = $conexao->prepare($sql); // prepara o comando antes de enviar para o banco
+                $stmt->bindParam(":nome", $_POST['nome']); // liga os dados do formulario aos parametros do sql
+                $stmt->bindParam(":cpf", $cpf); // guarda o CPF limpo no banco
+                $stmt->bindParam(":nasc", $_POST['nasc']);
+                $stmt->bindParam(":turma", $_POST['turma']);
+                $stmt->bindParam(":ativo", $_POST['ativo']);
+                $stmt->bindParam(":email", $_POST['email']);
+                $stmt->execute(); // executa o cadastro no banco
+                echo "Aluno cadastrado com sucesso!";
+            }
         }
         ?>
     </main>
