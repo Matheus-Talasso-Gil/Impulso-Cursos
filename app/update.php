@@ -32,10 +32,10 @@ require_once __DIR__ . '/../includes/functions.php';
             $aluno = $stmt->fetch(PDO::FETCH_ASSOC); // carrega novamente os dados atualizados
         }
         if (!$aluno) {
-            echo '<p>Aluno não encontrado.</p>'; // informa quando o ID não corresponde a um aluno
+            echo '<p class="message-error" role="alert">Aluno não encontrado.</p>'; // informa quando o ID não corresponde a um aluno
         }
     } else {
-        echo '<p>Digite o ID do aluno para carregar os dados ou escolha Editar no relatório.</p>';
+        echo '<p class="message-warning" role="status">Digite o ID do aluno para carregar os dados ou escolha Editar no relatório.</p>';
     }
     ?>
     <?php if (!$aluno): ?> <!-- exibe o campo para buscar um aluno pelo ID -->

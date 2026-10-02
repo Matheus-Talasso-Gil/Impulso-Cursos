@@ -22,7 +22,7 @@ function buscarAlunoPorCpf($conexao, $cpf) {
             <p class="lookup-eyebrow">ALUNOS</p>
             <h1>Consultar aluno</h1>
             <p>Encontre um cadastro pelo identificador que você tem em mãos.</p>
-        </div><section class="forms lookup-section"><form class="lookup-form" action="" method="post">
+        </div><section class="lookup-section"><form class="lookup-form" action="" method="post">
                 <fieldset class="lookup-methods"><!-- Permite escolher entre buscar por ID ou CPF. -->
                     <legend>Como deseja pesquisar?</legend>
                     <label class="lookup-method"><input type="radio" name="tipo_consulta" value="id"><span><strong>ID do aluno</strong><small>Use o número do cadastro</small></span></label>
@@ -39,14 +39,14 @@ function buscarAlunoPorCpf($conexao, $cpf) {
                 $id = (int) $_POST['id']; // Converte o valor recebido para inteiro.
                 if ($id >= 1 && $id <= 255) { // Aceita IDs no intervalo definido pelo formulário.
                     echo '<section class="student-result" aria-label="Resultado da consulta">'; read_w_w($conexao, $id); echo '</section>'; // Busca e mostra o aluno pelo ID.
-                } else echo "Número inválido, tente novamente <br>";
+                } else echo '<p class="message-error" role="alert">Número inválido, tente novamente.</p>';
             } elseif (($_POST['tipo_consulta'] ?? '') === 'cpf' && !empty($_POST['cpf'])) { // Usa o CPF somente se esse método foi selecionado.
                 $cpf = preg_replace('/\D/', '', $_POST['cpf']); // Remove pontos e traços antes da busca.
                 $aluno = buscarAlunoPorCpf($conexao, $cpf);
                 if ($aluno !== false) {
                     echo '<section class="student-result" aria-label="Resultado da consulta">'; read_w_w($conexao, $aluno['id']); echo '</section>'; // Reutiliza a exibição do cadastro encontrado.
                 } else echo '<p class="lookup-empty" role="status">Nenhum aluno encontrado com esse CPF.</p>';
-            } else echo "Informe um ID ou CPF para consultar.<br>";
+            } else echo '<p class="message-warning" role="status">Informe um ID ou CPF para consultar.</p>';
         }
         ?>
     </main>

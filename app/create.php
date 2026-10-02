@@ -46,7 +46,7 @@ require_once __DIR__ . '/../login/verificar_user.php';
             // remove pontos, traços e espaços para salvar o CPF no formato numérico no banco
             $cpf = preg_replace('/\D/', '', $_POST['cpf'] ?? '');
             if ($cpf === '') {
-                echo "CPF obrigatório.";
+                echo '<p class="message-error" role="alert">CPF obrigatório.</p>';
             } else {
                 // inclui o CPF no insert para manter o cadastro completo do aluno
                 $sql = "INSERT INTO alunos  (nome, cpf, nasc, turma, ativo, email) 
@@ -59,7 +59,7 @@ require_once __DIR__ . '/../login/verificar_user.php';
                 $stmt->bindParam(":ativo", $_POST['ativo']);
                 $stmt->bindParam(":email", $_POST['email']);
                 $stmt->execute(); // executa o cadastro no banco
-                echo "Aluno cadastrado com sucesso!";
+                echo '<p class="message-success" role="status">Aluno cadastrado com sucesso!</p>';
             }
         }
         ?>

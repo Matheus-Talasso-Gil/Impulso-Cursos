@@ -18,7 +18,7 @@ $alunos = listarAlunos($conexao); // busca todos os alunos para exibir no relat�
         <h1>Alunos matriculados</h1>
         <div class="table-wrapper" tabindex="0" role="region" aria-label="Relatório de alunos">
             <table>
-                <caption>Relatório de alunos da Impulso Cursos</caption>
+                <caption><div class="report-caption"><span>Relatório de alunos da Impulso Cursos</span><button type="button" class="filters-button">Filtros</button></div></caption>
                 <thead>
                     <tr>
                         <th scope="col">ID</th><th scope="col">Nome</th>
@@ -38,7 +38,7 @@ $alunos = listarAlunos($conexao); // busca todos os alunos para exibir no relat�
                         <td><?= htmlspecialchars((string) $aluno['nasc'], ENT_QUOTES, 'UTF-8') ?></td>
                         <td><?= htmlspecialchars((string) $aluno['turma'], ENT_QUOTES, 'UTF-8') ?></td>
                         <td><?= htmlspecialchars((string) ($aluno['email'] ?? ''), ENT_QUOTES, 'UTF-8') ?></td>
-                        <td><?= $aluno['ativo'] ? 'Ativo' : 'Inativo' ?></td>
+                        <td><span class="student-status <?= $aluno['ativo'] ? 'is-active' : 'is-inactive' ?>"><?= $aluno['ativo'] ? 'Ativo' : 'Inativo' ?></span></td>
                         <td>
                             <form action="update.php" method="post" class="edit-action"> <!-- envia o ID do aluno escolhido para a tela de atualização -->
                                 <input type="hidden" name="id" value="<?= htmlspecialchars((string) $aluno['id'], ENT_QUOTES, 'UTF-8') ?>">

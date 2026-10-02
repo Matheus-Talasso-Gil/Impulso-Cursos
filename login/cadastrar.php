@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <body>
     <?php include __DIR__ . '/../includes/header.php' ?>
-    <main>
+    <main class="auth-page">
         <h1>Cadastre-se no Sistema</h1>
         <?php if ($erro !== ''): ?>
             <p class="message-error" role="alert"><?= htmlspecialchars($erro, ENT_QUOTES, 'UTF-8') ?></p>

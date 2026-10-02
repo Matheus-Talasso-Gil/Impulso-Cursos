@@ -13,7 +13,7 @@ require_once __DIR__ . '/../login/verificar_user.php';
 </head>
 <body>
 <?php include __DIR__ . '/../includes/header.php'; ?>
-<main>
+<main class="delete-page">
     <h1>Excluir aluno</h1>
     <?php
  $aluno = false;
@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['id'])) { // verifica s
     $stmt->execute();
     $aluno = $stmt->fetch(PDO::FETCH_ASSOC); // pega os dados do aluno encontrado
     if (!$aluno) {
-        echo '<p>Aluno não encontrado.</p>';
+        echo '<p class="message-error" role="alert">Aluno não encontrado.</p>';
     } else {
         if (isset($_POST['confirmar'])) { // so exclui quando o usuario confirma
             apagar($conexao);
@@ -46,10 +46,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['id'])) { // verifica s
     <p>Nome: <?= htmlspecialchars((string) $aluno['nome'], ENT_QUOTES, 'UTF-8') ?></p> <!-- mostra o nome do aluno -->
     <p>Turma: <?= htmlspecialchars((string) $aluno['turma'], ENT_QUOTES, 'UTF-8') ?></p> <!-- mostra a turma do aluno -->
 
-    <form action="" method="post"> <!-- inicia o formulario de confirmacao -->
+    <form action="" method="post" class="danger-confirmation"> <!-- inicia o formulario de confirmacao -->
         <input type="hidden" name="id" value="<?= htmlspecialchars((string) $aluno['id'], ENT_QUOTES, 'UTF-8') ?>"> <!-- guarda o id escondido para enviar novamente -->
         <input type="submit" name="confirmar" value="Confirmar exclusão"> <!-- envia a confirmacao para permitir a exclusao -->
-        <a href="delete.php">Cancelar</a>
+        <a class="cancel-link" href="delete.php">Cancelar</a>
     </form>
     <?php endif; ?>
     <p><a class="report-link" href="select.php">Consultar RL</a></p>

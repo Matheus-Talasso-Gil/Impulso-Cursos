@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
 <?php include __DIR__ . '/../includes/header.php'; ?>
-<main>
+<main class="auth-page">
     <h1>Área do funcionário</h1>
     <p>Faça login para gerenciar os alunos da Impulso Cursos.</p>
     <?php if (($_GET['cadastro'] ?? '') === 'sucesso'): ?>

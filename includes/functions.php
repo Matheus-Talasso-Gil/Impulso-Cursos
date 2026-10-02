@@ -31,9 +31,9 @@ function apagar($conexao)
         $stmt = $conexao->prepare($sql);
         $stmt->bindParam(":id", $_POST['id']);
         $stmt->execute();
-        echo "Registro deletado.";
+        echo '<p class="message-success" role="status">Registro deletado.</p>';
     } else {
-        echo "Insira um ID para apagar.<br>";
+        echo '<p class="message-error" role="alert">Insira um ID para apagar.</p>';
     }
 }
 function Consultar($conexao, $id)
