@@ -2,12 +2,12 @@
 require_once __DIR__ . '/../includes/session.php';
 require_once __DIR__ . '/../login/verificar_user.php';
 require_once __DIR__ . '/../includes/functions.php';
-$turmas = ['INF-01' => 'Informática Básica', 'ING-01' => 'Inglês', 'ADM-01' => 'Administração']; // Lista as turmas que podem ser selecionadas no relatório.
-$turma = is_string($_GET['turma'] ?? null) ? $_GET['turma'] : ''; // Lê a turma enviada pelo formulário GET.
-if ($turma !== '' && !isset($turmas[$turma])) $turma = ''; // Ignora códigos de turma que não existem na lista.
-$situacao = $_GET['situacao'] ?? 'todas'; // Usa "todas" quando nenhuma situação foi escolhida.
-if (!is_string($situacao) || !in_array($situacao, ['todas', 'ativo', 'inativo'], true)) $situacao = 'todas'; // Aceita somente as opções previstas.
-$filtrosAtivos = $turma !== '' || $situacao !== 'todas'; // Indica se existe algum filtro além dos valores padrão.
+$turmas = ['INF-01' => 'Informática Básica', 'ING-01' => 'Inglês', 'ADM-01' => 'Administração']; // lista as turmas que podem ser selecionadas no relatório
+$turma = is_string($_GET['turma'] ?? null) ? $_GET['turma'] : ''; // lê a turma enviada pelo formulário get
+if ($turma !== '' && !isset($turmas[$turma])) $turma = ''; // ignora códigos de turma que não existem na lista
+$situacao = $_GET['situacao'] ?? 'todas'; // usa "todas" quando nenhuma situação foi escolhida
+if (!is_string($situacao) || !in_array($situacao, ['todas', 'ativo', 'inativo'], true)) $situacao = 'todas'; // aceita somente as opções previstas
+$filtrosAtivos = $turma !== '' || $situacao !== 'todas'; // indica se existe algum filtro além dos valores padrão
 $alunos = listarAlunos($conexao, $turma, $situacao); // busca os alunos conforme os filtros selecionados
 ?>
 <!DOCTYPE html>
@@ -23,15 +23,15 @@ $alunos = listarAlunos($conexao, $turma, $situacao); // busca os alunos conforme
     <main>
         <h1>Alunos matriculados</h1>
         <div class="report-toolbar">
-            <details class="filter-panel" <?= $filtrosAtivos ? 'open' : '' ?>><!-- Abre o painel nativamente e mantém aberto após aplicar filtros. -->
+            <details class="filter-panel" <?= $filtrosAtivos ? 'open' : '' ?>><!-- abre o painel nativamente e mantém aberto após aplicar filtros -->
                 <summary class="filters-button">Filtros</summary>
-                <form action="" method="get" class="filter-form"><!-- Envia os critérios pela URL sem usar JavaScript. -->
+                <form action="" method="get" class="filter-form"><!-- envia os critérios pela url sem usar javascript -->
                     <div class="filter-fields">
                         <div class="filter-field">
                             <label for="filtro-turma">Turma</label>
                             <select name="turma" id="filtro-turma">
                                 <option value="" <?= $turma === '' ? 'selected' : '' ?>>Todas as turmas</option>
-                                <?php foreach ($turmas as $codigo => $nome): ?> <!-- Gera as opções de turma sem repetir a marcação. -->
+                                <?php foreach ($turmas as $codigo => $nome): ?> <!-- gera as opções de turma sem repetir a marcação -->
                                 <option value="<?= htmlspecialchars($codigo, ENT_QUOTES, 'UTF-8') ?>" <?= $turma === $codigo ? 'selected' : '' ?>><?= htmlspecialchars($codigo . ' - ' . $nome, ENT_QUOTES, 'UTF-8') ?></option>
                                 <?php endforeach; ?>
                             </select>
@@ -55,7 +55,7 @@ $alunos = listarAlunos($conexao, $turma, $situacao); // busca os alunos conforme
                 <thead>
                     <tr>
                         <th scope="col">ID</th><th scope="col">Nome</th>
-                        <!-- coluna CPF adicionada para mostrar o documento do aluno com máscara -->
+                        <!-- coluna cpf adicionada para mostrar o documento do aluno com máscara -->
                         <th scope="col">CPF</th><th scope="col">Nascimento</th><th scope="col">Turma</th>
                         <th scope="col">E-mail</th><th scope="col">Situação</th><th scope="col">Ações</th>
                     </tr>
@@ -63,17 +63,17 @@ $alunos = listarAlunos($conexao, $turma, $situacao); // busca os alunos conforme
                 <tbody>
                     <?php foreach ($alunos as $aluno): ?> <!-- percorre a lista para criar uma linha por aluno -->
                     <tr>
-                        <!-- protege os dados exibidos contra a execução de código HTML ou JavaScript -->
+                        <!-- protege os dados exibidos contra a execução de código html ou javascript -->
                         <td><?= htmlspecialchars((string) $aluno['id'], ENT_QUOTES, 'UTF-8') ?></td>
                         <td><?= htmlspecialchars((string) $aluno['nome'], ENT_QUOTES, 'UTF-8') ?></td>
-                        <!-- formata o CPF para exibir pontos e traço, mantendo o valor salvo sem máscara -->
+                        <!-- formata o cpf para exibir pontos e traço mantendo o valor salvo sem máscara -->
                         <td><?= htmlspecialchars((string) (preg_replace('/(\d{3})(\d{3})(\d{3})(\d{2})/', '$1.$2.$3-$4', (string) ($aluno['cpf'] ?? ''))), ENT_QUOTES, 'UTF-8') ?></td>
                         <td><?= htmlspecialchars((string) $aluno['nasc'], ENT_QUOTES, 'UTF-8') ?></td>
                         <td><?= htmlspecialchars((string) $aluno['turma'], ENT_QUOTES, 'UTF-8') ?></td>
                         <td><?= htmlspecialchars((string) ($aluno['email'] ?? ''), ENT_QUOTES, 'UTF-8') ?></td>
-                        <td><span class="student-status <?= $aluno['ativo'] ? 'is-active' : 'is-inactive' ?>"><?= $aluno['ativo'] ? 'Ativo' : 'Inativo' ?></span></td> <!-- Exibe a situação do aluno como badge. -->
+                        <td><span class="student-status <?= $aluno['ativo'] ? 'is-active' : 'is-inactive' ?>"><?= $aluno['ativo'] ? 'Ativo' : 'Inativo' ?></span></td> <!-- exibe a situação do aluno como badge -->
                         <td>
-                            <form action="update.php" method="post" class="edit-action"> <!-- envia o ID do aluno escolhido para a tela de atualização -->
+                            <form action="update.php" method="post" class="edit-action"> <!-- envia o id do aluno escolhido para a tela de atualização -->
                                 <input type="hidden" name="id" value="<?= htmlspecialchars((string) $aluno['id'], ENT_QUOTES, 'UTF-8') ?>">
                                 <input type="submit" value="Editar">
                             </form>

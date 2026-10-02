@@ -1,4 +1,4 @@
--- Cria as tabelas somente quando ainda nao existem; nao apaga dados existentes.
+-- cria as tabelas somente quando ainda nao existem; nao apaga dados existentes
 CREATE TABLE IF NOT EXISTS alunos (
     id SERIAL PRIMARY KEY,
     nome VARCHAR(255) NOT NULL,

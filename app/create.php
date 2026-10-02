@@ -22,16 +22,16 @@ require_once __DIR__ . '/../login/verificar_cpf.php';
             if ($cpf === false) {
                 echo '<p class="message-error" role="alert">Informe um CPF válido.</p>';
             } else {
-                // inclui o CPF no insert para manter o cadastro completo do aluno
+                // inclui o cpf no insert para manter o cadastro completo do aluno
                 $sql = "INSERT INTO alunos  (nome, cpf, nasc, turma, ativo, email) 
                         VALUES   (:nome, :cpf, :nasc, :turma, :ativo, :email)"; // cria o comando para inserir um novo aluno
                 $stmt = $conexao->prepare($sql); // prepara o comando antes de enviar para o banco
                 $stmt->bindParam(":nome", $_POST['nome']); // liga os dados do formulario aos parametros do sql
-                $stmt->bindParam(":cpf", $cpf); // guarda o CPF limpo no banco
-                $stmt->bindParam(":nasc", $_POST['nasc']); // Associa a data de nascimento ao parâmetro SQL.
-                $stmt->bindParam(":turma", $_POST['turma']); // Associa a turma selecionada ao parâmetro SQL.
-                $stmt->bindParam(":ativo", $_POST['ativo']); // Associa a situação escolhida ao parâmetro SQL.
-                $stmt->bindParam(":email", $_POST['email']); // Associa o e-mail informado ao parâmetro SQL.
+                $stmt->bindParam(":cpf", $cpf); // guarda o cpf limpo no banco
+                $stmt->bindParam(":nasc", $_POST['nasc']); // associa a data de nascimento ao parâmetro sql
+                $stmt->bindParam(":turma", $_POST['turma']); // associa a turma selecionada ao parâmetro sql
+                $stmt->bindParam(":ativo", $_POST['ativo']); // associa a situação escolhida ao parâmetro sql
+                $stmt->bindParam(":email", $_POST['email']); // associa o e-mail informado ao parâmetro sql
                 $stmt->execute(); // executa o cadastro no banco
                 echo '<p class="message-success" role="status">Aluno cadastrado com sucesso!</p>';
             }

@@ -19,30 +19,30 @@ require_once __DIR__ . '/../login/verificar_cpf.php';
     <?php
     $aluno = false; // indica que nenhum aluno foi carregado inicialmente
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['id'])) {
-        $id = $_POST['id']; // recebe o ID enviado pelo formulário ou pelo relatório
-        $sql = 'SELECT * FROM alunos WHERE id = :id'; // busca o aluno correspondente ao ID
+        $id = $_POST['id']; // recebe o id enviado pelo formulário ou pelo relatório
+        $sql = 'SELECT * FROM alunos WHERE id = :id'; // busca o aluno correspondente ao id
         $stmt = $conexao->prepare($sql);
-        $stmt->bindParam(':id', $id); // associa o ID ao parâmetro da consulta
-        $stmt->execute(); // Executa a busca preparada do aluno pelo ID.
+        $stmt->bindParam(':id', $id); // associa o id ao parâmetro da consulta
+        $stmt->execute(); // executa a busca preparada do aluno pelo id
         $aluno = $stmt->fetch(PDO::FETCH_ASSOC); // guarda os dados encontrados para preencher o formulário
         if ($aluno && isset($_POST['nome'])) {
             $cpf = verificar_cpf($_POST['cpf'] ?? '');
             if ($cpf === false) {
                 echo '<p class="message-error" role="alert">Informe um CPF válido.</p>';
             } else {
-                Atualizar($conexao, $id, $_POST['nome'], $_POST['turma'], $_POST['nasc'], $_POST['ativo'], $_POST['email'], $cpf); // Salva os dados somente após validar o CPF.
-                $stmt->execute(); // Reexecuta a busca para recarregar os dados atualizados.
+                Atualizar($conexao, $id, $_POST['nome'], $_POST['turma'], $_POST['nasc'], $_POST['ativo'], $_POST['email'], $cpf); // salva os dados somente após validar o cpf
+                $stmt->execute(); // reexecuta a busca para recarregar os dados atualizados
                 $aluno = $stmt->fetch(PDO::FETCH_ASSOC); // carrega novamente os dados atualizados
             }
         }
         if (!$aluno) {
-            echo '<p class="message-error" role="alert">Aluno não encontrado.</p>'; // informa quando o ID não corresponde a um aluno
+            echo '<p class="message-error" role="alert">Aluno não encontrado.</p>'; // informa quando o id não corresponde a um aluno
         }
     } else {
         echo '<p class="message-warning" role="status">Digite o ID do aluno para carregar os dados ou escolha Editar no relatório.</p>';
     }
     ?>
-    <?php if (!$aluno): ?> <!-- exibe o campo para buscar um aluno pelo ID -->
+    <?php if (!$aluno): ?> <!-- exibe o campo para buscar um aluno pelo id -->
     <form action="" method="post">
         <label for="id">ID do aluno:</label>
         <input type="number" name="id" id="id" min="1" max="255" required>
@@ -51,13 +51,13 @@ require_once __DIR__ . '/../login/verificar_cpf.php';
     <?php endif; ?>
     <?php if ($aluno): ?> <!-- exibe o formulário preenchido quando o aluno é encontrado -->
     <form action="" method="post">
-        <!-- htmlspecialchars impede que caracteres especiais dos dados sejam interpretados como código HTML -->
+        <!-- htmlspecialchars impede que caracteres especiais dos dados sejam interpretados como código html -->
         <p>ID: <?= htmlspecialchars((string) $aluno['id'], ENT_QUOTES, 'UTF-8') ?></p>
-        <!-- mantém o ID associado ao aluno durante o envio da atualização -->
+        <!-- mantém o id associado ao aluno durante o envio da atualização -->
         <input type="hidden" name="id" value="<?= htmlspecialchars((string) $aluno['id'], ENT_QUOTES, 'UTF-8') ?>">
         <label for="nome">Nome:</label>
         <input type="text" name="nome" id="nome" value="<?= htmlspecialchars((string) $aluno['nome'], ENT_QUOTES, 'UTF-8') ?>" required>
-        <!-- campo de CPF para manter os dados do aluno consistentes com o cadastro -->
+        <!-- campo de cpf para manter os dados do aluno consistentes com o cadastro -->
         <label for="cpf">CPF:</label>
         <input type="text" name="cpf" id="cpf" maxlength="14" value="<?= htmlspecialchars((string) ($aluno['cpf'] ?? ''), ENT_QUOTES, 'UTF-8') ?>" required>
         <label for="turma">Turma:</label>

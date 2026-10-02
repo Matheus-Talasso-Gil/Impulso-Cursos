@@ -19,16 +19,16 @@ require_once __DIR__ . '/../login/verificar_user.php';
  $aluno = false;
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['id'])) { // verifica se recebeu um id pelo formulario
     $id = $_POST['id'];
-    $sql = 'SELECT * FROM alunos WHERE id = :id'; // Carrega o aluno antes de exibir a confirmação ou excluir.
+    $sql = 'SELECT * FROM alunos WHERE id = :id'; // carrega o aluno antes de exibir a confirmação ou excluir
     $stmt = $conexao->prepare($sql);
-    $stmt->bindParam(':id', $id); // liga o id recebido ao parametro da consulta
-    $stmt->execute(); // Executa a busca pelo ID recebido.
+    $stmt->bindParam(':id', $id); // liga o id recebido ao parâmetro da consulta
+    $stmt->execute(); // executa a busca pelo id recebido
     $aluno = $stmt->fetch(PDO::FETCH_ASSOC); // pega os dados do aluno encontrado
     if (!$aluno) {
         echo '<p class="message-error" role="alert">Aluno não encontrado.</p>';
-    } elseif (isset($_POST['confirmar'])) { // Exclui somente após a confirmação do usuário.
-        apagar($conexao); // Chama a função que remove o aluno pelo ID enviado.
-        $aluno = false; // Faz a página voltar ao formulário de busca após excluir.
+    } elseif (isset($_POST['confirmar'])) { // exclui somente após a confirmação do usuário
+        apagar($conexao); // chama a função que remove o aluno pelo id enviado
+        $aluno = false; // faz a página voltar ao formulário de busca após excluir
     }
 }
     ?>

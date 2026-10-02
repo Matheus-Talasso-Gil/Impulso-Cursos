@@ -1,5 +1,5 @@
--- ATENCAO: DESTRUTIVO. Apaga todos os alunos e usuarios antes de recriar as tabelas.
--- Use somente para reiniciar um banco de desenvolvimento, apos confirmar o banco e fazer backup.
+-- atencao: destrutivo apaga todos os alunos e usuarios antes de recriar as tabelas
+-- use somente para reiniciar um banco de desenvolvimento apos confirmar o banco e fazer backup
 BEGIN;
 DROP TABLE IF EXISTS alunos;
 DROP TABLE IF EXISTS usuarios;
