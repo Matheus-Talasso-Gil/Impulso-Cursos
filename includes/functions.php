@@ -2,15 +2,12 @@
 require_once __DIR__ . '/../database/connect_postgres.php';
 function cadastrar($conexao, $nome, $turma, $nasc, $ativo, $email, $cpf)
 {
-    $sql = "INSERT INTO alunos (nome, turma, nasc, ativo, email, cpf) VALUES (:nome, :turma, :nasc, :ativo, :email, :cpf)";
+    $sql = "INSERT INTO alunos (nome, turma, nasc, ativo, email, cpf) VALUES (:nome, :turma, :nasc, :ativo, :email, :cpf)"; // Prepara o cadastro do aluno com todos os campos.
     try {
-        $stmt = $conexao->prepare($sql);
-        $stmt->bindParam(":nome", $nome);
-        $stmt->bindParam(":turma", $turma);
-        $stmt->bindParam(":nasc", $nasc);
-        $stmt->bindParam(":ativo", $ativo);
-        $stmt->bindParam(":email", $email);
-        $stmt->bindParam(":cpf", $cpf);
+        $stmt = $conexao->prepare($sql); // Prepara a inserção para receber os valores.
+        $stmt->bindParam(":nome", $nome); $stmt->bindParam(":turma", $turma); // Associa nome e turma.
+        $stmt->bindParam(":nasc", $nasc); $stmt->bindParam(":ativo", $ativo); // Associa nascimento e situação.
+        $stmt->bindParam(":email", $email); $stmt->bindParam(":cpf", $cpf); // Associa e-mail e CPF.
         $stmt->execute();
         echo "Aluno inserido com sucesso!";
     } catch (PDOException $e) {
@@ -36,11 +33,10 @@ function listarAlunos($conexao, $turma = '', $situacao = 'todas') // Aceita filt
 }
 function apagar($conexao)
 {
-    if (isset($_POST['id']) && $_POST['id'] != "") {
-        $sql = "DELETE FROM alunos WHERE id = :id";
+    if (isset($_POST['id']) && $_POST['id'] != "") { // Só exclui quando o formulário envia um ID.
+        $sql = "DELETE FROM alunos WHERE id = :id"; // Prepara a exclusão do aluno selecionado.
         $stmt = $conexao->prepare($sql);
-        $stmt->bindParam(":id", $_POST['id']);
-        $stmt->execute();
+        $stmt->bindParam(":id", $_POST['id']); $stmt->execute(); // Executa a exclusão usando o ID recebido.
         echo '<p class="message-success" role="status">Registro deletado.</p>';
     } else {
         echo '<p class="message-error" role="alert">Insira um ID para apagar.</p>';
@@ -50,13 +46,10 @@ function Consultar($conexao, $id)
 {
     $sql = "SELECT nome, nasc, turma, ativo, email, cpf
             FROM alunos
-            WHERE id = :id";
-
-    $stmt = $conexao->prepare($sql);
-    $stmt->bindParam(":id", $id);
-    $stmt->execute();
-
-    $aluno = $stmt->fetch(PDO::FETCH_ASSOC);
+        WHERE id = :id"; // Seleciona os dados do aluno com o ID informado.
+    $stmt = $conexao->prepare($sql); // Prepara a consulta antes de executá-la.
+    $stmt->bindParam(":id", $id); $stmt->execute(); // Busca o aluno pelo ID.
+    $aluno = $stmt->fetch(PDO::FETCH_ASSOC); // Obtém o resultado como array associativo.
 
     if ($aluno) {
         echo 'Aluno: ' . htmlspecialchars((string) $aluno['nome'], ENT_QUOTES, 'UTF-8') . '<br>';
@@ -69,25 +62,17 @@ function Consultar($conexao, $id)
         echo "Aluno não encontrado.";
     }
 }
-// atualiza os dados do aluno, incluindo o CPF no banco
 function Atualizar($conexao, $id, $nome, $turma, $nasc, $ativo, $email, $cpf)
 {
     $sql = "UPDATE alunos SET nome = :nome, turma = :turma, nasc = :nasc,
-            ativo = :ativo, email = :email, cpf = :cpf WHERE id = :id";
-
+            ativo = :ativo, email = :email, cpf = :cpf WHERE id = :id"; // Atualiza todos os campos do aluno identificado.
     try {
         $stmt = $conexao->prepare($sql);
-
-        $stmt->bindParam(":id", $id);
-        $stmt->bindParam(":nome", $nome);
-        $stmt->bindParam(":turma", $turma);
-        $stmt->bindParam(":nasc", $nasc);
-        $stmt->bindParam(":ativo", $ativo);
-        $stmt->bindParam(":email", $email);
-        $stmt->bindParam(":cpf", $cpf);
-
+        $stmt->bindParam(":id", $id); $stmt->bindParam(":nome", $nome); // Associa ID e nome.
+        $stmt->bindParam(":turma", $turma); $stmt->bindParam(":nasc", $nasc); // Associa turma e nascimento.
+        $stmt->bindParam(":ativo", $ativo); $stmt->bindParam(":email", $email); // Associa situação e e-mail.
+        $stmt->bindParam(":cpf", $cpf); // Associa o CPF.
         $stmt->execute();
-
         echo '<p class="message-success" role="status">ALUNO ATUALIZADO COM SUCESSO! VOLTE AO RELATÓRIO PARA CONFERIR.</p>';
     } catch (PDOException $e) {
         echo "Erro: " . $e->getMessage();
@@ -98,10 +83,8 @@ function read_w_w($conexao, $id)
     try {
         $sql = "SELECT * FROM alunos WHERE id = :id;"; // Busca o cadastro pelo ID usando uma consulta preparada.
         $stmt = $conexao->prepare($sql);
-        $stmt->bindParam(":id", $id);
-        $stmt->execute();
-
-        $aluno = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt->bindParam(":id", $id); $stmt->execute(); // Executa a busca do aluno pelo ID.
+        $aluno = $stmt->fetch(PDO::FETCH_ASSOC); // Recupera os dados para exibi-los.
         if ($aluno !== false) { 
             $cpfFormatado = preg_replace('/(\d{3})(\d{3})(\d{3})(\d{2})/', '$1.$2.$3-$4', (string) ($aluno['cpf'] ?? '')); // Formata o CPF apenas na exibição.
             echo '<h2>Dados do aluno</h2><dl class="student-details">'; // Abre a lista que organiza os dados em rótulos e valores.
@@ -127,25 +110,20 @@ function cadastrar_user($conexao, $email, $senha)
     if (!filter_var($email, FILTER_VALIDATE_EMAIL) || $senha === '') {
         throw new InvalidArgumentException('Informe um e-mail válido e uma senha.');
     }
-    if (consultar_user($conexao, $email)) {
+        if (consultar_user($conexao, $email)) {
         throw new InvalidArgumentException('Este e-mail já está cadastrado. Faça login com a senha do cadastro mais recente.');
     }
-    $senhaHash = password_hash($senha, PASSWORD_DEFAULT); // gera o hash para não salvar a senha original
-    $sql = "INSERT INTO usuarios (email, senha)   VALUES (:email, :senha)";
+    $senhaHash = password_hash($senha, PASSWORD_DEFAULT); // Gera um hash para não armazenar a senha original.
+    $sql = "INSERT INTO usuarios (email, senha)   VALUES (:email, :senha)"; // Cria o comando para inserir o usuário.
     $stmt = $conexao->prepare($sql);
-    $stmt->bindParam(":email", $email);
-    $stmt->bindParam(":senha", $senhaHash);
-
-    $stmt->execute();
+    $stmt->bindParam(":email", $email); $stmt->bindParam(":senha", $senhaHash); // Associa e-mail e senha criptografada.
+    $stmt->execute(); // Salva o usuário no banco.
 }
 function consultar_user($conexao, $email)
 {
-    $email = trim($email);
-    // Há cadastros antigos duplicados: usa a senha do cadastro mais recente.
-    $sql = "SELECT id, email, senha FROM usuarios WHERE email = :email ORDER BY id DESC LIMIT 1";
+    $email = trim($email); // Remove espaços ao redor do e-mail informado.
+    $sql = "SELECT id, email, senha FROM usuarios WHERE email = :email ORDER BY id DESC LIMIT 1"; // Prefere o cadastro mais recente se houver duplicatas antigas.
     $stmt = $conexao->prepare($sql);
-    $stmt->bindParam(":email", $email);
-    $stmt->execute();
-    $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
-    return $usuario;
+    $stmt->bindParam(":email", $email); $stmt->execute(); // Consulta o usuário pelo e-mail.
+    return $stmt->fetch(PDO::FETCH_ASSOC); // Retorna o usuário encontrado ou false.
 }
