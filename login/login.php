@@ -2,18 +2,17 @@
 require_once __DIR__ . '/../includes/session.php';
 require_once __DIR__ . '/../includes/functions.php';
 $erro = '';
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') { // Só verifica as credenciais após o envio do formulário.
     try {
-        $usuario = consultar_user($conexao, $_POST['email'] ?? '');
-        if ($usuario && password_verify($_POST['senha'] ?? '', $usuario['senha'])) { // confere a senha digitada com o hash salvo
-            session_regenerate_id(true);
-            $_SESSION['id'] = $usuario['id'];
-            header('Location: ../index.php');
-            exit();
+        $usuario = consultar_user($conexao, $_POST['email'] ?? ''); // Procura a conta pelo e-mail enviado.
+        if ($usuario && password_verify($_POST['senha'] ?? '', $usuario['senha'])) { // Compara a senha digitada com o hash salvo.
+            session_regenerate_id(true); // Evita reutilizar o identificador antigo da sessão.
+            $_SESSION['id'] = $usuario['id']; // Marca o funcionário como autenticado.
+            header('Location: ../index.php'); exit(); // Abre a página inicial após o login.
         }
         $erro = 'Usuário ou senha inválidos';
     } catch (PDOException $e) {
-        error_log($e->getMessage());
+        error_log($e->getMessage()); // Registra o detalhe técnico sem exibi-lo ao usuário.
         $erro = 'Não foi possível consultar o cadastro. Tente novamente.';
     }
 }
@@ -39,9 +38,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php endif; ?>
     <form action="" method="post">
         <label for="email">E-mail:</label>
-        <input type="email" name="email" id="email" autocomplete="username" required><br><br>
+        <input type="email" name="email" id="email" autocomplete="username" required>
         <label for="senha">Senha:</label>
-        <input type="password" name="senha" id="senha" autocomplete="current-password" required><br><br>
+        <input type="password" name="senha" id="senha" autocomplete="current-password" required>
         <input type="submit" value="Entrar">
         <input type="reset" value="Limpar">
     </form>
