@@ -37,33 +37,42 @@ Para abrir e visualizar os protótipos `.excalidraw` no VS Code, instale a exten
 
 ### Telas
 
-#### Tela inicial
+<!-- markdownlint-disable MD033 -->
+<details>
+<summary>Tela inicial</summary>
 
 ![Tela inicial](prototipos/imagens/tela_inicial.png)
-
-#### Tela de login
+</details>
+<details>
+<summary>Tela de login</summary>
 
 ![Tela de login](prototipos/imagens/tela_login.png)
-
-#### Tela de cadastro
+</details>
+<details>
+<summary>Tela de cadastro</summary>
 
 ![Tela de cadastro](prototipos/imagens/tela_cadastrar.png)
-
-#### Tela de cadastro de aluno
+</details>
+<details>
+<summary>Tela de cadastro de aluno</summary>
 
 ![Tela de cadastro de aluno](prototipos/imagens/tela_cadastrar_aluno.png)
-
-#### Tela de exclusão
+</details>
+<details>
+<summary>Tela de exclusão</summary>
 
 ![Tela de exclusão](prototipos/imagens/tela_excluir.png)
-
-#### Tela de confirmação de exclusão
+</details>
+<details>
+<summary>Tela de confirmação de exclusão</summary>
 
 ![Tela de confirmação de exclusão](prototipos/imagens/tela_confirmar_exclusao.png)
-
-#### Tela de resultado da consulta
+</details>
+<details>
+<summary>Tela de resultado da consulta</summary>
 
 ![Tela de resultado da consulta](prototipos/imagens/tela_resultado_da_consulta.png)
+</details>
 
 ## Evolução do projeto no Trello
 
@@ -71,7 +80,6 @@ O desenvolvimento do **Impulso Cursos** foi acompanhado por um quadro Kanban no 
 
 As imagens abaixo registram a evolução das tarefas conforme os commits do projeto avançaram.
 
-<!-- markdownlint-disable MD033 -->
 <details>
 <summary><strong>Primeiros 7 commits</strong></summary>
 
@@ -152,7 +160,7 @@ Refatoração e organização do código, revisão dos arquivos de sessão/login
 ![Trello - commits 57 a 63](trello/commits57-63.png)
 
 </details>
-<!-- markdownlint enable MD033 -->
+<!-- markdownlint-enable MD033 -->
 
 ## Estrutura do projeto
 
