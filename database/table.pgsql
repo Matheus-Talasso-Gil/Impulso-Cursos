@@ -1,15 +1,14 @@
-CREATE TABLE alunos(
+CREATE TABLE alunos (
     id SERIAL PRIMARY KEY,
-    nome VARCHAR(255),
-    turma VARCHAR(255),
-    nasc DATE,
-    ativo BOOLEAN
+    nome VARCHAR(255) NOT NULL,
+    turma VARCHAR(255) NOT NULL,
+    nasc DATE NOT NULL,
+    ativo BOOLEAN NOT NULL DEFAULT TRUE,
+    email VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE usuarios(
+CREATE TABLE usuarios (
     id SERIAL PRIMARY KEY,
-    email VARCHAR(255),
-    senha VARCHAR(255)
+    email VARCHAR(255) NOT NULL UNIQUE,
+    senha VARCHAR(255) NOT NULL
 );
-
-INSERT INTO usuarios (email, senha) VALUES('matheus@gmail.com','matheus2010');
