@@ -13,7 +13,7 @@ Guarda os dados dos alunos cadastrados.
 | ativo | BOOLEAN | — | Sim | Indica se o aluno está ativo: true ou false. |
 | email | VARCHAR(100) | — | Sim | E-mail do aluno, com até 100 caracteres. |
 
-- Base: [TABEL_alunos.sql](app/TABEL_alunos.sql).
+- Base: tabela `alunos` criada em [database/table.pgsql](database/table.pgsql).
 - A coluna "Aceita nulo?" segue as regras definidas no banco.
 - Os formulários podem exigir campos mesmo quando o banco permite valor nulo.
 - O campo `turma` é armazenado como texto e não possui chave estrangeira.
