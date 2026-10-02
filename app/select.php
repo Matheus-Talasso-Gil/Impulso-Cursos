@@ -22,7 +22,8 @@ $alunos = listarAlunos($conexao); // busca todos os alunos para exibir no relat�
                 <thead>
                     <tr>
                         <th scope="col">ID</th><th scope="col">Nome</th>
-                        <th scope="col">Nascimento</th><th scope="col">Turma</th>
+                        <!-- coluna CPF adicionada para mostrar o documento do aluno com máscara -->
+                        <th scope="col">CPF</th><th scope="col">Nascimento</th><th scope="col">Turma</th>
                         <th scope="col">E-mail</th><th scope="col">Situação</th><th scope="col">Ações</th>
                     </tr>
                 </thead>
@@ -32,6 +33,8 @@ $alunos = listarAlunos($conexao); // busca todos os alunos para exibir no relat�
                         <!-- protege os dados exibidos contra a execução de código HTML ou JavaScript -->
                         <td><?= htmlspecialchars((string) $aluno['id'], ENT_QUOTES, 'UTF-8') ?></td>
                         <td><?= htmlspecialchars((string) $aluno['nome'], ENT_QUOTES, 'UTF-8') ?></td>
+                        <!-- formata o CPF para exibir pontos e traço, mantendo o valor salvo sem máscara -->
+                        <td><?= htmlspecialchars((string) (preg_replace('/(\d{3})(\d{3})(\d{3})(\d{2})/', '$1.$2.$3-$4', (string) ($aluno['cpf'] ?? ''))), ENT_QUOTES, 'UTF-8') ?></td>
                         <td><?= htmlspecialchars((string) $aluno['nasc'], ENT_QUOTES, 'UTF-8') ?></td>
                         <td><?= htmlspecialchars((string) $aluno['turma'], ENT_QUOTES, 'UTF-8') ?></td>
                         <td><?= htmlspecialchars((string) ($aluno['email'] ?? ''), ENT_QUOTES, 'UTF-8') ?></td>
@@ -45,7 +48,7 @@ $alunos = listarAlunos($conexao); // busca todos os alunos para exibir no relat�
                     </tr>
                     <?php endforeach; ?>
                     <?php if (!$alunos): ?> <!-- mostra uma mensagem quando ainda não há alunos cadastrados -->
-                    <tr><td colspan="7">Nenhum aluno cadastrado.</td></tr>
+                    <tr><td colspan="8">Nenhum aluno cadastrado.</td></tr>
                     <?php endif; ?>
                 </tbody>
             </table>
