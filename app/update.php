@@ -2,6 +2,7 @@
 require_once __DIR__ . '/../includes/session.php';
 require_once __DIR__ . '/../login/verificar_user.php';
 require_once __DIR__ . '/../includes/functions.php';
+require_once __DIR__ . '/../login/verificar_cpf.php';
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -25,11 +26,14 @@ require_once __DIR__ . '/../includes/functions.php';
         $stmt->execute(); // Executa a busca preparada do aluno pelo ID.
         $aluno = $stmt->fetch(PDO::FETCH_ASSOC); // guarda os dados encontrados para preencher o formulário
         if ($aluno && isset($_POST['nome'])) {
-            // atualiza os dados quando o formulário de edição é enviado, incluindo o CPF
-            $cpf = preg_replace('/\D/', '', $_POST['cpf'] ?? ''); // Remove a máscara antes de atualizar o CPF.
-            Atualizar($conexao, $id, $_POST['nome'], $_POST['turma'], $_POST['nasc'], $_POST['ativo'], $_POST['email'], $cpf); // Salva os dados enviados pelo formulário.
-            $stmt->execute(); // Reexecuta a busca para recarregar os dados atualizados.
-            $aluno = $stmt->fetch(PDO::FETCH_ASSOC); // carrega novamente os dados atualizados
+            $cpf = verificar_cpf($_POST['cpf'] ?? '');
+            if ($cpf === false) {
+                echo '<p class="message-error" role="alert">Informe um CPF válido.</p>';
+            } else {
+                Atualizar($conexao, $id, $_POST['nome'], $_POST['turma'], $_POST['nasc'], $_POST['ativo'], $_POST['email'], $cpf); // Salva os dados somente após validar o CPF.
+                $stmt->execute(); // Reexecuta a busca para recarregar os dados atualizados.
+                $aluno = $stmt->fetch(PDO::FETCH_ASSOC); // carrega novamente os dados atualizados
+            }
         }
         if (!$aluno) {
             echo '<p class="message-error" role="alert">Aluno não encontrado.</p>'; // informa quando o ID não corresponde a um aluno

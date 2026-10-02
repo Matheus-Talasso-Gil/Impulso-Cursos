@@ -2,6 +2,7 @@
 require_once __DIR__ . '/../includes/session.php';
 require_once __DIR__ . '/../includes/functions.php';
 require_once __DIR__ . '/../login/verificar_user.php';
+require_once __DIR__ . '/../login/verificar_cpf.php';
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -42,10 +43,9 @@ require_once __DIR__ . '/../login/verificar_user.php';
         </form>
         <?php
         if ($_SERVER['REQUEST_METHOD'] == 'POST') { // so executa o cadastro quando o formulario for enviado
-            // remove pontos, traços e espaços para salvar o CPF no formato numérico no banco
-            $cpf = preg_replace('/\D/', '', $_POST['cpf'] ?? '');
-            if ($cpf === '') {
-                echo '<p class="message-error" role="alert">CPF obrigatório.</p>';
+            $cpf = verificar_cpf($_POST['cpf'] ?? '');
+            if ($cpf === false) {
+                echo '<p class="message-error" role="alert">Informe um CPF válido.</p>';
             } else {
                 // inclui o CPF no insert para manter o cadastro completo do aluno
                 $sql = "INSERT INTO alunos  (nome, cpf, nasc, turma, ativo, email) 

@@ -1,5 +1,20 @@
 <?php
 require_once __DIR__ . '/../database/connect_postgres.php';
+function validar_cpf($cpf)
+{
+    $cpf = preg_replace('/\D/', '', (string) $cpf);
+    if (strlen($cpf) !== 11 || preg_match('/^(\d)\1{10}$/', $cpf)) return false;
+    $soma = 0;
+    for ($i = 0; $i < 9; $i++) $soma += (int) $cpf[$i] * (10 - $i);
+    $resto = $soma % 11;
+    $primeiro = $resto < 2 ? 0 : 11 - $resto;
+    if ((int) $cpf[9] !== $primeiro) return false;
+    $soma = 0;
+    for ($i = 0; $i < 10; $i++) $soma += (int) $cpf[$i] * (11 - $i);
+    $resto = $soma % 11;
+    $segundo = $resto < 2 ? 0 : 11 - $resto;
+    return (int) $cpf[10] === $segundo;
+}
 function cadastrar($conexao, $nome, $turma, $nasc, $ativo, $email, $cpf)
 {
     $sql = "INSERT INTO alunos (nome, turma, nasc, ativo, email, cpf) VALUES (:nome, :turma, :nasc, :ativo, :email, :cpf)"; // Prepara o cadastro do aluno com todos os campos.
